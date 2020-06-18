@@ -1,5 +1,6 @@
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/input_field.dart';
+import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,23 +17,29 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         resizeToAvoidBottomPadding: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            InputField(
-              onChanged: () {},
-              maxLength: 10,
-              focusNode: loginFocusNode,
-              labelText: 'Nome',
-              isValid: false,
-            ),
-            Center(
-              child: PrimaryButton(
-                text: 'Login',
-                onPressed: () {},
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InputField(
+                onChanged: () {},
+                maxLength: 10,
+                focusNode: loginFocusNode,
+                labelText: 'Nome',
+                isValid: false,
               ),
-            ),
-          ],
+              SizedBox(
+                height: 16,
+              ),
+              Center(
+                child: PrimaryButton(
+                  text: 'Login',
+                  onPressed: () {},
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

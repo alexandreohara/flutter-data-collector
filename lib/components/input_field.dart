@@ -1,4 +1,5 @@
 import 'package:data_collector/design/colors.dart';
+import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,6 +34,7 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return TextFormField(
       maxLength: maxLength,
       decoration: InputDecoration(
@@ -41,14 +43,14 @@ class InputField extends StatelessWidget {
         hintText: hintText ?? '',
         errorText: errorText ?? null,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
           borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(BORDER_RADIUS_8),
           ),
         ),
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(BORDER_RADIUS_8),
           ),
         ),
       ),

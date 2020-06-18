@@ -1,4 +1,5 @@
 import 'package:data_collector/design/colors.dart';
+import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -14,20 +15,20 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return FlatButton(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
       ),
-      color: Theme.of(context).primaryColor,
+      color: theme.primaryColor,
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(SPACING_16),
         child: Text(
           text,
-          style: Theme.of(context)
-              .textTheme
-              .button
-              .copyWith(color: textColor ?? COLOR_WHITE),
+          style:
+              theme.textTheme.button.copyWith(color: textColor ?? COLOR_WHITE),
         ),
       ),
       onPressed: onPressed,
