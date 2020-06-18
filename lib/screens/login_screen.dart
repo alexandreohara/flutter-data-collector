@@ -26,7 +26,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 onChanged: () {},
                 maxLength: 10,
                 focusNode: loginFocusNode,
-                labelText: 'Nome',
+                labelText: 'Usuário',
+                isValid: false,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              InputField(
+                onChanged: () {},
+                maxLength: 10,
+                focusNode: loginFocusNode,
+                labelText: 'Senha',
                 isValid: false,
               ),
               SizedBox(
