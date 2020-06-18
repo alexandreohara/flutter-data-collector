@@ -19,7 +19,7 @@ class PrimaryButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
       ),
-      color: COLOR_PRIMARY,
+      color: Theme.of(context).primaryColor,
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Text(
