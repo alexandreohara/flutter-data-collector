@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: 'Coletar dados',
                 onPressed: () {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushNamed(context, '/identification');
                 },
               ),
             ),

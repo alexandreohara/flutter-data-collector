@@ -2,13 +2,16 @@ import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 
-class IdentificationScreen extends StatelessWidget {
+class FormScreen extends StatelessWidget {
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode cnpjFocusNode = FocusNode();
-  final maskedController =
-      MaskedTextController(mask: '00.000.000/0000-00', text: '');
+  final FocusNode serialNumberFocusNode = FocusNode();
+  final FocusNode supplierFocusNode = FocusNode();
+  final FocusNode modelFocusNode = FocusNode();
+  final FocusNode typeFocusNode = FocusNode();
+  final FocusNode descriptionFocusNode = FocusNode();
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +29,16 @@ class IdentificationScreen extends StatelessWidget {
                   height: SPACING_32,
                 ),
                 Text(
-                  'Antes de começar, digite o seu nome e o CNPJ do cliente',
+                  'Preencha os dados abaixo',
                   style: theme.textTheme.headline5,
-                ),
-                Text(
-                  'Você poderá alterar essas informações futuramente',
-                  style: theme.textTheme.bodyText2,
                 ),
                 SizedBox(
                   height: SPACING_16,
                 ),
                 InputField(
                   onChanged: (text) {},
-                  maxLength: 10,
                   focusNode: nameFocusNode,
-                  labelText: 'Nome',
+                  labelText: 'Número da placa antiga',
                   isValid: true,
                 ),
                 SizedBox(
@@ -49,17 +47,41 @@ class IdentificationScreen extends StatelessWidget {
                 InputField(
                   onChanged: (text) {},
                   focusNode: cnpjFocusNode,
-                  labelText: 'CNPJ',
-                  hintText: '__.___.___/____-__',
+                  labelText: 'Nova placa',
                   isValid: true,
-                  controller: maskedController,
-                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: SPACING_16,
+                ),
+                InputField(
+                  onChanged: (text) {},
+                  focusNode: modelFocusNode,
+                  labelText: 'Modelo',
+                  isValid: true,
+                ),
+                SizedBox(
+                  height: SPACING_16,
+                ),
+                InputField(
+                  onChanged: (text) {},
+                  focusNode: typeFocusNode,
+                  labelText: 'Tipo',
+                  isValid: true,
+                ),
+                SizedBox(
+                  height: SPACING_16,
+                ),
+                InputField(
+                  onChanged: (text) {},
+                  focusNode: descriptionFocusNode,
+                  labelText: 'Descrição',
+                  isValid: true,
                 ),
                 SizedBox(
                   height: SPACING_48,
                 ),
                 PrimaryButton(
-                  text: 'Coletar dados',
+                  text: 'Continuar',
                   onPressed: () {
                     Navigator.pushNamed(context, '/form');
                   },
