@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        primarySwatch: Colors.red,
         errorColor: COLOR_ALERT_RED,
         fontFamily: 'Roboto',
         textTheme: textTheme,
