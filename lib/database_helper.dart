@@ -23,7 +23,7 @@ class DatabaseHelper {
 
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'databaseName');
+    String path = join(documentsDirectory.path, 'item_database.db');
     return await openDatabase(path,
         version: 1, onCreate: _onCreate);
   }
@@ -44,13 +44,11 @@ class DatabaseHelper {
           ''');
   }
 
-  //returns all rows
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database db = await instance.database;
     return await db.query(table);
   }
 
-  //returns row count
   Future<int> queryRowCount() async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
@@ -62,16 +60,12 @@ class DatabaseHelper {
     return await db.insert(table, row);
   }
 
-  // Assumimos aqui que a coluna id no mapa está definida. Os outros
-  // valores das colunas serão usados para atualizar a linha.
   Future<int> update(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnId];
     return await db.update(table, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  // Exclui a linha especificada pelo id. O número de linhas afetadas é
-  // retornada. Isso deve ser igual a 1, contanto que a linha exista.
   Future<int> delete(int id) async {
     Database db = await instance.database;
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
