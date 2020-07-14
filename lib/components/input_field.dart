@@ -8,13 +8,11 @@ class InputField extends StatelessWidget {
     this.labelText,
     this.hintText,
     this.errorText,
-    this.obscureText,
     this.controller,
     this.focusNode,
     this.keyboardType,
     this.onChanged,
     this.isValid,
-    this.icon,
     this.maxLength,
     this.inputFormatters,
   });
@@ -22,13 +20,11 @@ class InputField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final String errorText;
-  final bool obscureText;
   final bool isValid;
   final dynamic controller;
   final FocusNode focusNode;
   final TextInputType keyboardType;
   final Function onChanged;
-  final Widget icon;
   final int maxLength;
   final List<TextInputFormatter> inputFormatters;
 
@@ -54,6 +50,11 @@ class InputField extends StatelessWidget {
           ),
         ),
       ),
+      focusNode: focusNode,
+      controller: controller,
+      keyboardType: keyboardType ?? TextInputType.text,
+      onChanged: onChanged,
+      inputFormatters: inputFormatters,
     );
   }
 }

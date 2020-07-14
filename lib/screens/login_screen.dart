@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               InputField(
-                onChanged: () {},
+                onChanged: (text) {},
                 maxLength: 10,
                 focusNode: loginFocusNode,
                 labelText: 'Usuário',
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 16,
               ),
               InputField(
-                onChanged: () {},
+                onChanged: (text) {},
                 maxLength: 10,
                 focusNode: loginFocusNode,
                 labelText: 'Senha',
