@@ -1,4 +1,5 @@
 import 'package:data_collector/components/button.dart';
+import 'package:data_collector/components/card-sample.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -21,14 +22,10 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: SPACING_32,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
-              child: PrimaryButton(
-                text: 'Coletar dados',
-                onPressed: () {
-                  Navigator.pushNamed(context, '/identification');
-                },
-              ),
+            CardSample(
+              onPressed: () {
+                Navigator.pushNamed(context, '/identification');
+              },
             ),
           ],
         ),
