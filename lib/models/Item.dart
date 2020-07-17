@@ -1,33 +1,46 @@
+import 'package:data_collector/database_helper.dart';
+import 'package:sqflite/sqlite_api.dart';
+
 class Item {
   final int id;
+  final String serialNumber;
   final String name;
   final int number;
-  final String deploymentState;
-  final String incidentState;
-  final String vendor;
+  final String supplier;
   final String model;
-  final String description;
   final String type;
-  final String owner;
-  final String serialNumber;
-  final String warrantyExpirationDate;
-  final String installDate;
-  final String note;
+  final String description;
+  final String incidentState;
+  final String location;
+  final String observations;
 
   Item({
     this.id,
+    this.serialNumber,
     this.name,
     this.number,
-    this.deploymentState,
-    this.incidentState,
-    this.vendor,
+    this.supplier,
     this.model,
-    this.description,
     this.type,
-    this.owner,
-    this.serialNumber,
-    this.warrantyExpirationDate,
-    this.installDate,
-    this.note,
+    this.description,
+    this.incidentState,
+    this.location,
+    this.observations,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'serialNumber': serialNumber,
+      'name': name,
+      'number': number,
+      'supplier': supplier,
+      'model': model,
+      'type': type,
+      'description': description,
+      'incidentState': incidentState,
+      'location': location,
+      'observations': observations, 
+    };
+  }
 }

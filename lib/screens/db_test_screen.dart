@@ -58,8 +58,8 @@ class TestDatabase extends StatelessWidget {
 
   void _insert() async {
     Map<String, dynamic> row = {
-      DatabaseHelper.columnName: 'Leandro',
-      DatabaseHelper.columnAge: 30
+      DatabaseHelper.name: 'Leandro',
+      DatabaseHelper.number: 30
     };
     final id = await dbHelper.insert(row);
     print('linha inserida id: $id');
@@ -74,8 +74,8 @@ class TestDatabase extends StatelessWidget {
   void _update() async {
     Map<String, dynamic> row = {
       DatabaseHelper.columnId: 1,
-      DatabaseHelper.columnName: 'Ale',
-      DatabaseHelper.columnAge: 20
+      DatabaseHelper.name: 'Ale',
+      DatabaseHelper.number: 20
     };
     final linhasAfetadas = await dbHelper.update(row);
     print('atualizadas $linhasAfetadas linha(s)');
