@@ -12,6 +12,8 @@ class DatabaseHelper {
 
   static final tableName = 'item';
   static final columnId = 'id';
+  static final user = 'user';
+  static final cnpj = 'cnpj';
   static final serialNumber = 'serialNumber';
   static final name = 'name';
   static final number = 'number';
@@ -45,6 +47,8 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tableName (
             $columnId INTEGER PRIMARY KEY,
+            $user TEXT NOT NULL,
+            $cnpj INTEGER NOT NULL,
             $serialNumber TEXT,
             $name TEXT,
             $number INTEGER,
