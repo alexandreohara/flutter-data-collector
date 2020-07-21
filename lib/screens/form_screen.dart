@@ -39,7 +39,6 @@ class FormScreen extends StatelessWidget {
                     height: SPACING_16,
                   ),
                   InputField(
-                    validator: (value) => requiredValidator(value),
                     onChanged: (text) {},
                     focusNode: nameFocusNode,
                     labelText: 'Número da placa antiga',
@@ -59,7 +58,6 @@ class FormScreen extends StatelessWidget {
                     height: SPACING_16,
                   ),
                   InputField(
-                    validator: (value) => requiredValidator(value),
                     onChanged: (text) {},
                     focusNode: modelFocusNode,
                     labelText: 'Modelo',
@@ -69,7 +67,6 @@ class FormScreen extends StatelessWidget {
                     height: SPACING_16,
                   ),
                   InputField(
-                    validator: (value) => requiredValidator(value),
                     onChanged: (text) {},
                     focusNode: typeFocusNode,
                     labelText: 'Tipo',
@@ -79,7 +76,6 @@ class FormScreen extends StatelessWidget {
                     height: SPACING_16,
                   ),
                   InputField(
-                    validator: (value) => requiredValidator(value),
                     onChanged: (text) {},
                     focusNode: descriptionFocusNode,
                     labelText: 'Descrição',
