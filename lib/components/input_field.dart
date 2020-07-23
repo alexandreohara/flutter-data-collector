@@ -1,4 +1,3 @@
-import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -35,3 +35,37 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 }
+
+class SecondaryButton extends StatelessWidget {
+  const SecondaryButton({
+    this.text,
+    this.color,
+    @required this.onPressed,
+  });
+
+  final String text;
+  final Color color;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return OutlineButton(
+      borderSide: BorderSide(color: color ?? theme.primaryColor),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
+      ),
+      color: theme.primaryColor,
+      child: Padding(
+        padding: EdgeInsets.all(SPACING_16),
+        child: Text(
+          text,
+          style: theme.textTheme.button
+              .copyWith(color: color ?? theme.primaryColor),
+        ),
+      ),
+      onPressed: onPressed,
+    );
+  }
+}
