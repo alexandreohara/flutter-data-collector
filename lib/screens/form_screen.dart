@@ -17,12 +17,12 @@ class FormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Form(
-      key: _formKey,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Scaffold(
-          body: Container(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        body: Form(
+          key: _formKey,
+          child: Container(
             padding: EdgeInsets.symmetric(horizontal: SPACING_16),
             child: SafeArea(
               child: Column(

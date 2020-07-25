@@ -20,12 +20,12 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Form(
-      key: _formKey,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-        child: Scaffold(
-          body: Container(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        body: Form(
+          key: _formKey,
+          child: Container(
             padding: EdgeInsets.symmetric(horizontal: SPACING_16),
             child: SafeArea(
               child: Column(
@@ -58,7 +58,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                   ),
                   InputField(
                     validator: (value) {
-                      return multiplesValidators(value, [requiredValidator, cnpjValidator]);
+                      return multiplesValidators(
+                          value, [requiredValidator, cnpjValidator]);
                     },
                     onChanged: (text) {},
                     focusNode: cnpjFocusNode,
