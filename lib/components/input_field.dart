@@ -14,6 +14,7 @@ class InputField extends StatelessWidget {
     this.isValid,
     this.maxLength,
     this.inputFormatters,
+    this.validator,
   });
 
   final String labelText;
@@ -26,11 +27,13 @@ class InputField extends StatelessWidget {
   final Function onChanged;
   final int maxLength;
   final List<TextInputFormatter> inputFormatters;
+  final String Function(String) validator;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      validator: this.validator,
       maxLength: maxLength,
       decoration: InputDecoration(
         counterText: '',
