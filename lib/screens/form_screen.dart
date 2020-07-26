@@ -16,9 +16,8 @@ class _FormScreenState extends State<FormScreen> {
   final TextEditingController oldNumberController = TextEditingController();
   final FocusNode newNumberFocusNode = FocusNode();
   final TextEditingController newNumberController = TextEditingController();
-  final FocusNode cnpjFocusNode = FocusNode();
   final FocusNode serialNumberFocusNode = FocusNode();
-  final TextEditingController serialNumerController = TextEditingController();
+  final TextEditingController serialNumberController = TextEditingController();
   final FocusNode supplierFocusNode = FocusNode();
   final FocusNode modelFocusNode = FocusNode();
   final FocusNode typeFocusNode = FocusNode();
@@ -27,7 +26,7 @@ class _FormScreenState extends State<FormScreen> {
   @override
   void dispose() {
     oldNumberController.dispose();
-    serialNumerController.dispose();
+    serialNumberController.dispose();
     newNumberController.dispose();
     super.dispose();
   }
