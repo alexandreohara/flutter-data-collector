@@ -1,18 +1,36 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/helpers.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
-class FormScreen extends StatelessWidget {
+class FormScreen extends StatefulWidget {
+  @override
+  _FormScreenState createState() => _FormScreenState();
+}
+
+class _FormScreenState extends State<FormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode nameFocusNode = FocusNode();
+  final FocusNode oldNumberFocusNode = FocusNode();
+  final TextEditingController oldNumberController = TextEditingController();
+  final FocusNode newNumberFocusNode = FocusNode();
+  final TextEditingController newNumberController = TextEditingController();
   final FocusNode cnpjFocusNode = FocusNode();
   final FocusNode serialNumberFocusNode = FocusNode();
+  final TextEditingController serialNumerController = TextEditingController();
   final FocusNode supplierFocusNode = FocusNode();
   final FocusNode modelFocusNode = FocusNode();
   final FocusNode typeFocusNode = FocusNode();
   final FocusNode descriptionFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    oldNumberController.dispose();
+    serialNumerController.dispose();
+    newNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,21 +56,45 @@ class FormScreen extends StatelessWidget {
                   SizedBox(
                     height: SPACING_16,
                   ),
-                  InputField(
-                    onChanged: (text) {},
-                    focusNode: nameFocusNode,
-                    labelText: 'Número da placa antiga',
-                    isValid: true,
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      InputField(
+                        onChanged: (text) {},
+                        focusNode: oldNumberFocusNode,
+                        labelText: 'Número da placa antiga',
+                        isValid: true,
+                        controller: oldNumberController,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.crop_free),
+                        onPressed: () async {
+                          oldNumberController.text = await handleScan();
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: SPACING_16,
                   ),
-                  InputField(
-                    validator: (value) => requiredValidator(value),
-                    onChanged: (text) {},
-                    focusNode: cnpjFocusNode,
-                    labelText: 'Nova placa',
-                    isValid: true,
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      InputField(
+                        validator: (value) => requiredValidator(value),
+                        onChanged: (text) {},
+                        focusNode: newNumberFocusNode,
+                        labelText: 'Nova placa',
+                        isValid: true,
+                        controller: newNumberController,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.crop_free),
+                        onPressed: () async {
+                          newNumberController.text = await handleScan();
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: SPACING_16,
@@ -99,5 +141,10 @@ class FormScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> handleScan() async {
+    var result = await BarcodeScanner.scan();
+    return result?.rawContent ?? '';
   }
 }
