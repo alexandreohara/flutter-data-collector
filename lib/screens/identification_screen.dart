@@ -47,7 +47,6 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                   ),
                   InputField(
                     validator: (value) => requiredValidator(value),
-                    onChanged: (text) {},
                     maxLength: 10,
                     focusNode: nameFocusNode,
                     labelText: 'Nome',
@@ -61,7 +60,6 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                       return multiplesValidators(
                           value, [requiredValidator, cnpjValidator]);
                     },
-                    onChanged: (text) {},
                     focusNode: cnpjFocusNode,
                     labelText: 'CNPJ',
                     hintText: '__.___.___/____-__',

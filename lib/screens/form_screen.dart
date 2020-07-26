@@ -59,7 +59,6 @@ class _FormScreenState extends State<FormScreen> {
                     alignment: Alignment.centerRight,
                     children: <Widget>[
                       InputField(
-                        onChanged: (text) {},
                         focusNode: oldNumberFocusNode,
                         labelText: 'Número da placa antiga',
                         isValid: true,
@@ -69,9 +68,8 @@ class _FormScreenState extends State<FormScreen> {
                         icon: Image.asset(
                           'lib/assets/icons/barcode-scanner.png',
                         ),
-                        onPressed: () async {
-                          oldNumberController.text = await handleScan();
-                        },
+                        onPressed: () async =>
+                            oldNumberController.text = await handleScan(),
                       ),
                     ],
                   ),
@@ -83,7 +81,6 @@ class _FormScreenState extends State<FormScreen> {
                     children: <Widget>[
                       InputField(
                         validator: (value) => requiredValidator(value),
-                        onChanged: (text) {},
                         focusNode: newNumberFocusNode,
                         labelText: 'Nova placa',
                         isValid: true,
@@ -93,9 +90,8 @@ class _FormScreenState extends State<FormScreen> {
                         icon: Image.asset(
                           'lib/assets/icons/barcode-scanner.png',
                         ),
-                        onPressed: () async {
-                          newNumberController.text = await handleScan();
-                        },
+                        onPressed: () async =>
+                            newNumberController.text = await handleScan(),
                       ),
                     ],
                   ),
@@ -103,7 +99,6 @@ class _FormScreenState extends State<FormScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
-                    onChanged: (text) {},
                     focusNode: modelFocusNode,
                     labelText: 'Modelo',
                     isValid: true,
@@ -112,7 +107,6 @@ class _FormScreenState extends State<FormScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
-                    onChanged: (text) {},
                     focusNode: typeFocusNode,
                     labelText: 'Tipo',
                     isValid: true,
@@ -121,7 +115,6 @@ class _FormScreenState extends State<FormScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
-                    onChanged: (text) {},
                     focusNode: descriptionFocusNode,
                     labelText: 'Descrição',
                     isValid: true,
