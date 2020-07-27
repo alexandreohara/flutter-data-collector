@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:data_collector/components/alert_modal.dart';
 import 'package:data_collector/components/button.dart';
+import 'package:data_collector/database_helper.dart';
 import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:file_picker/file_picker.dart';
@@ -72,6 +75,17 @@ class HomeScreen extends StatelessWidget {
               type: FileType.custom,
               allowedExtensions: ['csv'],
             );
+            List<List<dynamic>> csv = await file
+                .openRead()
+                .transform(utf8.decoder)
+                .transform(CsvToListConverter(
+                  fieldDelimiter: ';',
+                  textDelimiter: '"',
+                  textEndDelimiter: '"',
+                ))
+                .toList();
+            await _insert(csv);
+            Navigator.of(context).pop();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -79,5 +93,26 @@ class HomeScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _insert(List<List<dynamic>> csv) async {
+    final dbHelper = DatabaseHelper.instance;
+    csv.removeAt(0);
+    csv.forEach((row) async  {
+      await dbHelper.insert({
+        DatabaseHelper.serialNumber: row[0],
+        DatabaseHelper.name: row[1],
+        DatabaseHelper.supplier: row[2],
+        DatabaseHelper.model: row[3],
+        DatabaseHelper.type: row[4],
+        DatabaseHelper.description: row[5],
+      });
+    });
+  }
+
+  void _queryAll() async {
+    final dbHelper = DatabaseHelper.instance;
+    final todasLinhas = await dbHelper.queryAllRows();
+    todasLinhas.forEach((row) => print(row));
   }
 }

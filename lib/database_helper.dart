@@ -47,8 +47,8 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tableName (
             $columnId INTEGER PRIMARY KEY,
-            $user TEXT NOT NULL,
-            $cnpj INTEGER NOT NULL,
+            $user TEXT,
+            $cnpj INTEGER,
             $serialNumber TEXT,
             $name TEXT,
             $number INTEGER,

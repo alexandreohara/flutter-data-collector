@@ -3,6 +3,8 @@ import 'package:sqflite/sqlite_api.dart';
 
 class Item {
   final int id;
+  final String user;
+  final String cnpj;
   final String serialNumber;
   final String name;
   final int number;
@@ -16,6 +18,8 @@ class Item {
 
   Item({
     this.id,
+    this.user,
+    this.cnpj,
     this.serialNumber,
     this.name,
     this.number,
@@ -31,6 +35,8 @@ class Item {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'user': user,
+      'cnpj': cnpj,
       'serialNumber': serialNumber,
       'name': name,
       'number': number,
