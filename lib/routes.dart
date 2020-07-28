@@ -3,6 +3,7 @@ import 'package:data_collector/screens/form_screen.dart';
 import 'package:data_collector/screens/home_screen.dart';
 import 'package:data_collector/screens/identification_screen.dart';
 import 'package:data_collector/screens/login_screen.dart';
+import 'package:data_collector/screens/second_form_screen.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> routes(RouteSettings settings) {
@@ -18,6 +19,9 @@ Route<dynamic> routes(RouteSettings settings) {
       break;
     case '/form':
       return MaterialPageRoute(builder: (context) => FormScreen());
+      break;
+    case '/second-form':
+      return MaterialPageRoute(builder: (context) => SecondFormScreen());
       break;
     case '/test-db':
       return MaterialPageRoute(builder: (context) => TestDatabase());

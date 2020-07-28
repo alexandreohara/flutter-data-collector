@@ -20,11 +20,18 @@ class FormScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: SPACING_16),
-            child: SafeArea(
+        appBar: AppBar(
+          title: Text('Descrição do item'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: SPACING_16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -88,7 +95,7 @@ class FormScreen extends StatelessWidget {
                     text: 'Continuar',
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        Navigator.pushNamed(context, '/form');
+                        Navigator.pushNamed(context, '/second-form');
                       }
                     },
                   ),

@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.red,
-        primaryColor: Color.fromARGB(255, 38, 38, 38),
         errorColor: COLOR_ALERT_YELLOW,
         fontFamily: 'Roboto',
         textTheme: textTheme,
