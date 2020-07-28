@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
   Future<void> _insert(List<List<dynamic>> csv) async {
     final dbHelper = DatabaseHelper.instance;
     csv.removeAt(0);
-    csv.forEach((row) async  {
+    csv.forEach((row) async {
       await dbHelper.insert({
         DatabaseHelper.serialNumber: row[0],
         DatabaseHelper.name: row[1],
@@ -108,11 +108,5 @@ class HomeScreen extends StatelessWidget {
         DatabaseHelper.description: row[5],
       });
     });
-  }
-
-  void _queryAll() async {
-    final dbHelper = DatabaseHelper.instance;
-    final todasLinhas = await dbHelper.queryAllRows();
-    todasLinhas.forEach((row) => print(row));
   }
 }
