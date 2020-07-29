@@ -13,7 +13,39 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                'Demétrio Cokinos',
+                style: theme.textTheme.headline6.copyWith(color: COLOR_WHITE),
+              ),
+              accountEmail: Text('CNPJ: 12.123.123/213-23'),
+            ),
+            ListTile(
+              title: Text('Editar usuário base'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Ver itens registrados'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/test-db');
+              },
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -34,7 +66,7 @@ class HomeScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: 'Coletar dados',
                 onPressed: () {
-                  Navigator.pushNamed(context, '/identification');
+                  Navigator.pushNamed(context, '/form');
                 },
               ),
             ),

@@ -30,9 +30,16 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.symmetric(horizontal: SPACING_16),
-          child: SafeArea(
+        appBar: AppBar(
+          title: Text('Adicionar informações'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: SPACING_16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -93,7 +100,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 PrimaryButton(
                   text: 'Concluir',
                   onPressed: () {
-                    Navigator.pushNamed(context, '/form');
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                 ),
               ],
