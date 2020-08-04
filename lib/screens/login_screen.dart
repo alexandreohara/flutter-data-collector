@@ -9,7 +9,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FocusNode loginFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  final TextEditingController passwordController = TextEditingController();
+
+  var errorText;
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              InputField(
-                onChanged: (text) {},
-                maxLength: 10,
-                focusNode: loginFocusNode,
-                labelText: 'Usuário',
-                isValid: false,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: SPACING_48),
+                child: Image.asset(
+                  'lib/assets/images/axxia-logo.png',
+                  fit: BoxFit.fitWidth,
+                ),
               ),
               SizedBox(
-                height: 16,
+                height: SPACING_32,
               ),
               InputField(
-                onChanged: (text) {},
+                errorText: errorText,
                 maxLength: 10,
-                focusNode: loginFocusNode,
+                focusNode: passwordFocusNode,
                 labelText: 'Senha',
-                isValid: false,
+                isValid: true,
+                controller: passwordController,
               ),
               SizedBox(
                 height: 16,
@@ -45,7 +55,16 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: PrimaryButton(
                   text: 'Login',
-                  onPressed: () {},
+                  onPressed: () {
+                    if (passwordController.text == '1234') {
+                      errorText = null;
+                      Navigator.pushNamed(context, '/');
+                    } else {
+                      setState(() {
+                        errorText = 'Senha incorreta';
+                      });
+                    }
+                  },
                 ),
               ),
             ],

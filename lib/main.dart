@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Roboto',
         textTheme: textTheme,
       ),
-      initialRoute: '/',
+      initialRoute: '/login',
       onGenerateRoute: routes,
     );
   }
