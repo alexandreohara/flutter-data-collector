@@ -39,7 +39,7 @@ class Camera {
   }
 
   Future<PickedFile> _imageSelectorCamera() async {
-    return await picker.getImage(source: ImageSource.camera);
+    return picker.getImage(source: ImageSource.camera);
   }
 
   Future<void> _deleteIncorretFile() async {
@@ -47,11 +47,12 @@ class Camera {
 
     var allFiles = directory.list();
 
-    var incorrectFiles = await allFiles
-        .where((file) =>
-            '20' != file.path.substring(0, 2) &&
-            file.path.contains(new RegExp(r'\.(png|jpe?g)')))
-        .toList();
+    var incorrectFiles = await allFiles.where((file) {
+      return !file.path
+              .substring(ANDROID_DIRECTORY_PATH.length + 1)
+              .startsWith('20') &&
+          file.path.contains(new RegExp(r'\.(png|jpe?g)'));
+    }).toList();
 
     var lastFile = incorrectFiles.last;
 
