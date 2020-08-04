@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:data_collector/components/button.dart';
+import 'package:data_collector/components/camera.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,9 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   final FocusNode descriptionFocusNode = FocusNode();
   double _value = 0;
 
+  File picture;
+  String pictureName;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -31,12 +37,11 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Adicionar informações'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          )
-        ),
+            title: Text('Adicionar informações'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
+            )),
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: SPACING_16),
@@ -92,8 +97,14 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                   height: SPACING_16,
                 ),
                 SecondaryButton(
-                  text: 'Adicionar foto',
-                  onPressed: () {}),
+                    text: pictureName != null
+                        ? 'Substituir foto'
+                        : 'Adicionar foto',
+                    onPressed: () => _takePicture()),
+                SizedBox(
+                  height: SPACING_48,
+                ),
+                _picuterOrPlaceholder(),
                 SizedBox(
                   height: SPACING_48,
                 ),
@@ -109,5 +120,27 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
         ),
       ),
     );
+  }
+
+  Widget _picuterOrPlaceholder() {
+    if (picture != null) {
+      var bytes = picture.readAsBytesSync();
+      return Image.memory(bytes, height: 300);
+    }
+    return Image.asset('lib/assets/images/image-placeholder.png', height: 100);
+  }
+
+  Future<void> _takePicture() async {
+    if (pictureName == null) {
+      DateTime today = DateTime.now();
+      pictureName =
+          '${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}-Numero_De_Serie.png';
+    }
+    var cameraResult = await Camera().takePicture(pictureName);
+    if (cameraResult != null) {
+      setState(() {
+        picture = cameraResult;
+      });
+    }
   }
 }
