@@ -7,8 +7,10 @@ import 'package:data_collector/components/button.dart';
 import 'package:data_collector/database_helper.dart';
 import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/constants.dart';
+import 'package:data_collector/models/Item.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -20,20 +22,23 @@ class HomeScreen extends StatelessWidget {
       ),
       drawer: Drawer(
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: Text(
-                'Demétrio Cokinos',
-                style: theme.textTheme.headline6.copyWith(color: COLOR_WHITE),
-              ),
-              accountEmail: Text('CNPJ: 12.123.123/213-23'),
-            ),
+            Consumer<Item>(
+                builder: (BuildContext context, Item item, Widget child) {
+              return UserAccountsDrawerHeader(
+                accountName: Text(
+                  item.user,
+                  style: theme.textTheme.headline6.copyWith(color: COLOR_WHITE),
+                ),
+                accountEmail: Text(item.cnpj),
+              );
+            }),
             ListTile(
-              title: Text('Editar usuário base'),
+              title: Text('Alterar Nome e CNPJ'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, '/edit-identification');
               },
             ),
             ListTile(

@@ -1,20 +1,19 @@
-import 'package:data_collector/database_helper.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:flutter/material.dart';
 
-class Item {
-  final int id;
-  final String user;
-  final String cnpj;
-  final String serialNumber;
-  final String name;
-  final int number;
-  final String supplier;
-  final String model;
-  final String type;
-  final String description;
-  final String incidentState;
-  final String location;
-  final String observations;
+class Item extends ChangeNotifier {
+  int id;
+  String user;
+  String cnpj;
+  String serialNumber;
+  String name;
+  int number;
+  String supplier;
+  String model;
+  String type;
+  String description;
+  String incidentState;
+  String location;
+  String observations;
 
   Item({
     this.id,
@@ -46,7 +45,7 @@ class Item {
       'description': description,
       'incidentState': incidentState,
       'location': location,
-      'observations': observations, 
+      'observations': observations,
     };
   }
 }
