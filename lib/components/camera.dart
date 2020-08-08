@@ -4,6 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
 
+const ANDROID_DIRECTORY_PATH =
+    '/storage/emulated/0/Android/data/com.example.data_collector/files/Pictures';
+
 class Camera {
   var picker = ImagePicker();
 
@@ -11,7 +14,8 @@ class Camera {
     var status = await _askPermission();
     if (status == PermissionStatus.granted) {
       var picture = await _imageSelectorCamera();
-      if (picture == null) {
+      if (picture == null && Platform.isAndroid) {
+        _deleteIncorrectFile();
         print('user gave up taking picture');
         return null;
       }
@@ -22,7 +26,6 @@ class Camera {
         File(picture.path).delete();
         return renamedFile;
       }
-      return File(picture.path);
     }
 
     print('permission not granted');
@@ -36,7 +39,23 @@ class Camera {
   }
 
   Future<PickedFile> _imageSelectorCamera() async {
-    var imageFile = await picker.getImage(source: ImageSource.camera);
-    return imageFile;
+    return picker.getImage(source: ImageSource.camera);
+  }
+
+  Future<void> _deleteIncorrectFile() async {
+    final directory = new Directory(ANDROID_DIRECTORY_PATH);
+
+    var allFiles = directory.list();
+
+    var incorrectFiles = await allFiles.where((file) {
+      return !file.path
+              .substring(ANDROID_DIRECTORY_PATH.length + 1)
+              .startsWith('20') &&
+          file.path.contains(RegExp(r'\.(png|jpe?g)'));
+    }).toList();
+
+    var lastFile = incorrectFiles.last;
+
+    File(lastFile.path).delete();
   }
 }

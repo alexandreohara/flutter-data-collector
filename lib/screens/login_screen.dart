@@ -1,6 +1,7 @@
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
+import 'package:data_collector/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,7 +10,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FocusNode loginFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  final TextEditingController passwordController = TextEditingController();
+
+  var errorText;
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +32,25 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              InputField(
-                onChanged: (text) {},
-                maxLength: 10,
-                focusNode: loginFocusNode,
-                labelText: 'Usuário',
-                isValid: false,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: SPACING_48),
+                child: Image.asset(
+                  'lib/assets/images/axxia-logo.png',
+                  fit: BoxFit.fitWidth,
+                ),
               ),
               SizedBox(
-                height: 16,
+                height: SPACING_32,
               ),
               InputField(
-                onChanged: (text) {},
+                keyboardType: TextInputType.visiblePassword,
+                errorText: errorText,
                 maxLength: 10,
-                focusNode: loginFocusNode,
+                focusNode: passwordFocusNode,
                 labelText: 'Senha',
-                isValid: false,
+                isValid: true,
+                controller: passwordController,
+                obscureText: true,
               ),
               SizedBox(
                 height: 16,
@@ -45,7 +58,21 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: PrimaryButton(
                   text: 'Login',
-                  onPressed: () {},
+                  onPressed: () {
+                    if (passwordController.text == '1234') {
+                      errorText = null;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          settings: RouteSettings(name: '/home'),
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        errorText = 'Senha incorreta';
+                      });
+                    }
+                  },
                 ),
               ),
             ],
