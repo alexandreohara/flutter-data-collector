@@ -111,7 +111,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 PrimaryButton(
                   text: 'Concluir',
                   onPressed: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context)
+                        .popUntil(ModalRoute.withName('/home'));
                   },
                 ),
               ],

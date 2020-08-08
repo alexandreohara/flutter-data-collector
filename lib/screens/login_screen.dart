@@ -1,6 +1,7 @@
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
+import 'package:data_collector/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -42,12 +43,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: SPACING_32,
               ),
               InputField(
+                keyboardType: TextInputType.visiblePassword,
                 errorText: errorText,
                 maxLength: 10,
                 focusNode: passwordFocusNode,
                 labelText: 'Senha',
                 isValid: true,
                 controller: passwordController,
+                obscureText: true,
               ),
               SizedBox(
                 height: 16,
@@ -58,7 +61,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (passwordController.text == '1234') {
                       errorText = null;
-                      Navigator.pushNamed(context, '/');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          settings: RouteSettings(name: '/home'),
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
                     } else {
                       setState(() {
                         errorText = 'Senha incorreta';

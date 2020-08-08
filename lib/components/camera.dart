@@ -15,7 +15,7 @@ class Camera {
     if (status == PermissionStatus.granted) {
       var picture = await _imageSelectorCamera();
       if (picture == null && Platform.isAndroid) {
-        _deleteIncorretFile();
+        _deleteIncorrectFile();
         print('user gave up taking picture');
         return null;
       }
@@ -42,7 +42,7 @@ class Camera {
     return picker.getImage(source: ImageSource.camera);
   }
 
-  Future<void> _deleteIncorretFile() async {
+  Future<void> _deleteIncorrectFile() async {
     final directory = new Directory(ANDROID_DIRECTORY_PATH);
 
     var allFiles = directory.list();
@@ -51,7 +51,7 @@ class Camera {
       return !file.path
               .substring(ANDROID_DIRECTORY_PATH.length + 1)
               .startsWith('20') &&
-          file.path.contains(new RegExp(r'\.(png|jpe?g)'));
+          file.path.contains(RegExp(r'\.(png|jpe?g)'));
     }).toList();
 
     var lastFile = incorrectFiles.last;

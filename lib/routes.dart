@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 Route<dynamic> routes(RouteSettings settings) {
   switch (settings.name) {
     case '/':
-      return MaterialPageRoute(builder: (context) => HomeScreen());
-      break;
-    case '/login':
       return MaterialPageRoute(builder: (context) => LoginScreen());
+      break;
+    case '/home':
+      return MaterialPageRoute(builder: (context) => HomeScreen());
       break;
     case '/identification':
       return MaterialPageRoute(builder: (context) => IdentificationScreen());

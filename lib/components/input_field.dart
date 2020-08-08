@@ -15,6 +15,7 @@ class InputField extends StatelessWidget {
     this.maxLength,
     this.inputFormatters,
     this.validator,
+    this.obscureText,
   });
 
   final String labelText;
@@ -28,6 +29,7 @@ class InputField extends StatelessWidget {
   final int maxLength;
   final List<TextInputFormatter> inputFormatters;
   final String Function(String) validator;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class InputField extends StatelessWidget {
       keyboardType: keyboardType ?? TextInputType.text,
       onChanged: onChanged,
       inputFormatters: inputFormatters,
+      obscureText: this.obscureText ?? false,
     );
   }
 }
