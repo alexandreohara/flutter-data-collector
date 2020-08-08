@@ -104,7 +104,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 SizedBox(
                   height: SPACING_48,
                 ),
-                _picuterOrPlaceholder(),
+                _pictureOrPlaceholder(),
                 SizedBox(
                   height: SPACING_48,
                 ),
@@ -123,7 +123,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
     );
   }
 
-  Widget _picuterOrPlaceholder() {
+  Widget _pictureOrPlaceholder() {
     if (picture != null) {
       var bytes = picture.readAsBytesSync();
       return Image.memory(bytes, height: 300);
