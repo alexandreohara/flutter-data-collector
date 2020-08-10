@@ -3,7 +3,9 @@ import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/helpers.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
+import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FormScreen extends StatefulWidget {
   @override
@@ -19,31 +21,46 @@ class _FormScreenState extends State<FormScreen> {
   final FocusNode serialNumberFocusNode = FocusNode();
   final TextEditingController serialNumberController = TextEditingController();
   final FocusNode supplierFocusNode = FocusNode();
+  final TextEditingController supplierController = TextEditingController();
   final FocusNode modelFocusNode = FocusNode();
+  final TextEditingController modelController = TextEditingController();
   final FocusNode typeFocusNode = FocusNode();
+  final TextEditingController typeController = TextEditingController();
   final FocusNode descriptionFocusNode = FocusNode();
+  final TextEditingController descriptionController = TextEditingController();
 
   @override
   void dispose() {
     oldNumberController.dispose();
     serialNumberController.dispose();
     newNumberController.dispose();
+    supplierFocusNode.dispose();
+    modelController.dispose();
+    typeController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var item = Provider.of<Item>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Descrição do item'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          )
-        ),
+            title: Text('Descrição do item'),
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  item.name = null;
+                  item.number = null;
+                  item.supplier = null;
+                  item.model = null;
+                  item.type = null;
+                  item.description = null;
+                  Navigator.of(context).pop();
+                })),
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -92,6 +109,7 @@ class _FormScreenState extends State<FormScreen> {
                         labelText: 'Nova placa',
                         isValid: true,
                         controller: newNumberController,
+                        keyboardType: TextInputType.number,
                       ),
                       IconButton(
                         icon: Image.asset(
@@ -106,7 +124,17 @@ class _FormScreenState extends State<FormScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
+                    focusNode: supplierFocusNode,
+                    controller: supplierController,
+                    labelText: 'Fornecedor',
+                    isValid: true,
+                  ),
+                  SizedBox(
+                    height: SPACING_16,
+                  ),
+                  InputField(
                     focusNode: modelFocusNode,
+                    controller: modelController,
                     labelText: 'Modelo',
                     isValid: true,
                   ),
@@ -115,6 +143,7 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                   InputField(
                     focusNode: typeFocusNode,
+                    controller: typeController,
                     labelText: 'Tipo',
                     isValid: true,
                   ),
@@ -123,6 +152,7 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                   InputField(
                     focusNode: descriptionFocusNode,
+                    controller: descriptionController,
                     labelText: 'Descrição',
                     isValid: true,
                   ),
@@ -133,6 +163,13 @@ class _FormScreenState extends State<FormScreen> {
                     text: 'Continuar',
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
+                        item.name = oldNumberController.text;
+                        item.number = int.parse(newNumberController.text);
+                        item.supplier = supplierController.text;
+                        item.model = modelController.text;
+                        item.type = typeController.text;
+                        item.description = descriptionController.text;
+
                         Navigator.pushNamed(context, '/second-form');
                       }
                     },

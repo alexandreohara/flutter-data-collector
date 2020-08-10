@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class Item extends ChangeNotifier {
   int id;
-  String user;
-  String cnpj;
-  String serialNumber;
-  String name;
-  int number;
-  String supplier;
-  String model;
-  String type;
-  String description;
-  String incidentState;
-  String location;
-  String observations;
+  String user; // usuário que está preenchendo os dados
+  String cnpj; // cnpj da empresa do cliente
+  String serialNumber; // número de série do produto (caso exista)
+  String name; // placa antiga
+  int number; // número novo
+  String supplier; // fornecedor
+  String model; // modelo
+  String type; // categoria do produto
+  String description; // descrição do produto
+  String incidentState; // estado de uso
+  String location; // localização
+  String observations; // observações
 
   Item({
     this.id,

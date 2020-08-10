@@ -39,6 +39,13 @@ class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Descrição do item'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         body: Form(
           key: _formKey,
           child: Container(
