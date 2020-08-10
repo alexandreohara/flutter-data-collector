@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Primary
-const Color COLOR_PRIMARY = Color(0xFF6933fF);
+const Color COLOR_PRIMARY = Color(0xFF262626);
 
 // Secondary
 const Color COLOR_ALERT_RED = Color(0xFFD73A21);

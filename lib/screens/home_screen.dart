@@ -28,10 +28,10 @@ class HomeScreen extends StatelessWidget {
                 builder: (BuildContext context, Item item, Widget child) {
               return UserAccountsDrawerHeader(
                 accountName: Text(
-                  item.user,
+                  '${item.user}',
                   style: theme.textTheme.headline6.copyWith(color: COLOR_WHITE),
                 ),
-                accountEmail: Text(item.cnpj),
+                accountEmail: Text('${item.cnpj}'),
               );
             }),
             ListTile(

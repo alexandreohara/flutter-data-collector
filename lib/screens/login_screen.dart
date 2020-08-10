@@ -31,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: SPACING_48),
@@ -53,27 +54,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
               ),
               SizedBox(
-                height: 16,
+                height: SPACING_32,
               ),
-              Center(
-                child: PrimaryButton(
-                  text: 'Login',
-                  onPressed: () {
-                    if (passwordController.text == '1234') {
-                      errorText = null;
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          settings: RouteSettings(name: '/home'),
-                          builder: (context) => HomeScreen(),
-                        ),
-                      );
-                    } else {
-                      setState(() {
-                        errorText = 'Senha incorreta';
-                      });
-                    }
-                  },
-                ),
+              PrimaryButton(
+                text: 'Login',
+                onPressed: () {
+                  if (passwordController.text == '1234') {
+                    errorText = null;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        settings: RouteSettings(name: '/home'),
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
+                  } else {
+                    setState(() {
+                      errorText = 'Senha incorreta';
+                    });
+                  }
+                },
               ),
             ],
           ),

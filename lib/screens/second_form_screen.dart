@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/camera.dart';
+import 'package:data_collector/components/confirmation_modal.dart';
 import 'package:data_collector/components/input_field.dart';
+import 'package:data_collector/components/success_modal.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
@@ -121,9 +123,22 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.incidentState = '${_value.round()}';
                     item.location = locationController.text;
                     item.observations = observationController.text;
-                    Navigator.of(context)
-                        .popUntil(ModalRoute.withName('/home'));
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          // return ConfirmationModal(
+                          //   onCancel: () => Navigator.of(context).pop(),
+                          //   onSubmit: () {},
+                          // );
+                          return SuccessModal(
+                            onSubmit: () {},
+                          );
+                        });
+                    // Navigator.of(context).popUntil(ModalRoute.withName('/home'));
                   },
+                ),
+                SizedBox(
+                  height: SPACING_32,
                 ),
               ],
             ),
@@ -136,7 +151,14 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   Widget _pictureOrPlaceholder() {
     if (picture != null) {
       var bytes = picture.readAsBytesSync();
-      return Image.memory(bytes, height: 300);
+      return ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(SPACING_16)),
+        child: Image.memory(
+          bytes,
+          height: 300,
+          fit: BoxFit.fill,
+        ),
+      );
     }
     return Image.asset('lib/assets/images/image-placeholder.png', height: 100);
   }

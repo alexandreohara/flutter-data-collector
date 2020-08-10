@@ -174,6 +174,9 @@ class _FormScreenState extends State<FormScreen> {
                       }
                     },
                   ),
+                  SizedBox(
+                    height: SPACING_24,
+                  ),
                 ],
               ),
             ),
