@@ -88,7 +88,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                       if (_formKey.currentState.validate()) {
                         item.user = userController.text;
                         item.cnpj = maskedController.text;
-                        Navigator.pushNamed(context, '/', arguments: item);
+                        Navigator.pushNamedAndRemoveUntil(context, '/home',
+                            ModalRoute.withName('/identification'));
                       }
                     },
                   ),

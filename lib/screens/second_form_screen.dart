@@ -5,10 +5,12 @@ import 'package:data_collector/components/camera.dart';
 import 'package:data_collector/components/confirmation_modal.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/components/success_modal.dart';
+import 'package:data_collector/database_helper.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SecondFormScreen extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   final TextEditingController locationController = TextEditingController();
   final FocusNode observationFocusNode = FocusNode();
   final TextEditingController observationController = TextEditingController();
+  final dbHelper = DatabaseHelper.instance;
   double _value = 0;
 
   File picture;
@@ -126,13 +129,17 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          // return ConfirmationModal(
-                          //   onCancel: () => Navigator.of(context).pop(),
+                          return ConfirmationModal(
+                              onCancel: () => Navigator.of(context).pop(),
+                              onSubmit: () {
+                                _addToDatabase(item).then((value) {
+                                  Navigator.of(context).pop();
+                                  _openSuccessModal(item);
+                                });
+                              });
+                          // return SuccessModal(
                           //   onSubmit: () {},
                           // );
-                          return SuccessModal(
-                            onSubmit: () {},
-                          );
                         });
                     // Navigator.of(context).popUntil(ModalRoute.withName('/home'));
                   },
@@ -175,5 +182,32 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
         picture = cameraResult;
       });
     }
+  }
+
+  Future<void> _addToDatabase(Item item) async {
+    if (item.id == null) {
+      print(item.id);
+      final id = await dbHelper.insert(item.toMap());
+      item.id = id;
+      print(item.id);
+      return;
+    }
+    await dbHelper.update(item.toMap());
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
+  }
+
+  void _openSuccessModal(Item item) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return SuccessModal(onSubmit: () {
+            item.clearFields();
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+          });
+        });
   }
 }

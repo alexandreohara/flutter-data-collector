@@ -42,12 +42,19 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Ver itens registrados'),
+              title: Text('Alterar Nome e CNPJ'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/test-db');
+                Navigator.pushNamed(context, '/edit-identification');
               },
             ),
+            // ListTile(
+            //   title: Text('Ver itens registrados'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, '/test-db');
+            //   },
+            // ),
           ],
         ),
       ),

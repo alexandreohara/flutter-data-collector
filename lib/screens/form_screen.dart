@@ -124,6 +124,15 @@ class _FormScreenState extends State<FormScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
+                    focusNode: serialNumberFocusNode,
+                    controller: serialNumberController,
+                    labelText: 'Número de Série',
+                    isValid: true,
+                  ),
+                  SizedBox(
+                    height: SPACING_16,
+                  ),
+                  InputField(
                     focusNode: supplierFocusNode,
                     controller: supplierController,
                     labelText: 'Fornecedor',
@@ -165,6 +174,7 @@ class _FormScreenState extends State<FormScreen> {
                       if (_formKey.currentState.validate()) {
                         item.name = oldNumberController.text;
                         item.number = int.parse(newNumberController.text);
+                        item.serialNumber = serialNumberController.text;
                         item.supplier = supplierController.text;
                         item.model = modelController.text;
                         item.type = typeController.text;

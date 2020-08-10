@@ -2,6 +2,7 @@ import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/screens/home_screen.dart';
+import 'package:data_collector/screens/identification_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -61,12 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   if (passwordController.text == '1234') {
                     errorText = null;
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        settings: RouteSettings(name: '/home'),
-                        builder: (context) => HomeScreen(),
-                      ),
-                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/identification', ModalRoute.withName('/'));
                   } else {
                     setState(() {
                       errorText = 'Senha incorreta';

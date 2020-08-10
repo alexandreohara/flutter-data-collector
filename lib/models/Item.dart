@@ -45,7 +45,21 @@ class Item extends ChangeNotifier {
       'description': description,
       'incidentState': incidentState,
       'location': location,
-      'observations': observations,
+      'observation': observations,
     };
+  }
+
+  void clearFields() {
+    this.id = null;
+    this.serialNumber = null;
+    this.name = null;
+    this.number = null;
+    this.supplier = null;
+    this.model = null;
+    this.type = null;
+    this.description = null;
+    this.incidentState = null;
+    this.location = null;
+    this.observations = null;
   }
 }
