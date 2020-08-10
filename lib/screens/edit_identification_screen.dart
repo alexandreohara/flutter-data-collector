@@ -7,18 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:provider/provider.dart';
 
-class IdentificationScreen extends StatefulWidget {
+class EditIdentificationScreen extends StatefulWidget {
+  const EditIdentificationScreen();
+
   @override
-  _IdentificationScreenState createState() => _IdentificationScreenState();
+  _EditIdentificationScreenState createState() =>
+      _EditIdentificationScreenState();
 }
 
-class _IdentificationScreenState extends State<IdentificationScreen> {
+class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode userFocusNode = FocusNode();
   final FocusNode cnpjFocusNode = FocusNode();
   final userController = TextEditingController();
   final maskedController =
       MaskedTextController(mask: '00.000.000/0000-00', text: '');
+
+  _EditIdentificationScreenState();
 
   @override
   void dispose() {
@@ -34,6 +39,13 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Descrição do item'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         body: Form(
           key: _formKey,
           child: Container(
@@ -46,7 +58,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_32,
                   ),
                   Text(
-                    'Antes de começar, digite o seu nome e o CNPJ do cliente',
+                    'Digite o seu nome e o CNPJ do cliente',
                     style: theme.textTheme.headline5,
                   ),
                   Text(
@@ -83,12 +95,12 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_48,
                   ),
                   PrimaryButton(
-                    text: 'Coletar dados',
+                    text: 'Salvar',
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         item.user = userController.text;
                         item.cnpj = maskedController.text;
-                        Navigator.pushNamed(context, '/', arguments: item);
+                        Navigator.of(context).pop();
                       }
                     },
                   ),

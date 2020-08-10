@@ -4,7 +4,9 @@ import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/camera.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
+import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SecondFormScreen extends StatefulWidget {
   @override
@@ -12,36 +14,39 @@ class SecondFormScreen extends StatefulWidget {
 }
 
 class _SecondFormScreenState extends State<SecondFormScreen> {
-  final FocusNode nameFocusNode = FocusNode();
-
-  final FocusNode cnpjFocusNode = FocusNode();
-
-  final FocusNode serialNumberFocusNode = FocusNode();
-
-  final FocusNode supplierFocusNode = FocusNode();
-
-  final FocusNode modelFocusNode = FocusNode();
-
-  final FocusNode typeFocusNode = FocusNode();
-
-  final FocusNode descriptionFocusNode = FocusNode();
+  final FocusNode locationFocusNode = FocusNode();
+  final TextEditingController locationController = TextEditingController();
+  final FocusNode observationFocusNode = FocusNode();
+  final TextEditingController observationController = TextEditingController();
   double _value = 0;
 
   File picture;
   String pictureName;
 
   @override
+  void dispose() {
+    locationController.dispose();
+    observationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var item = Provider.of<Item>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         appBar: AppBar(
             title: Text('Adicionar informações'),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.of(context).pop(),
-            )),
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  item.incidentState = null;
+                  item.location = null;
+                  item.observations = null;
+                  Navigator.of(context).pop();
+                })),
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: SPACING_16),
@@ -73,7 +78,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 InputField(
                   onChanged: (text) {},
-                  focusNode: cnpjFocusNode,
+                  focusNode: locationFocusNode,
+                  controller: locationController,
                   labelText: 'Localização',
                   isValid: true,
                 ),
@@ -82,7 +88,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 InputField(
                   onChanged: (text) {},
-                  focusNode: modelFocusNode,
+                  focusNode: observationFocusNode,
+                  controller: observationController,
                   labelText: 'Observações',
                   isValid: true,
                 ),
@@ -111,6 +118,9 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 PrimaryButton(
                   text: 'Concluir',
                   onPressed: () {
+                    item.incidentState = '${_value.round()}';
+                    item.location = locationController.text;
+                    item.observations = observationController.text;
                     Navigator.of(context)
                         .popUntil(ModalRoute.withName('/home'));
                   },

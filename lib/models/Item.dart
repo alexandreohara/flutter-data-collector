@@ -1,20 +1,19 @@
-import 'package:data_collector/database_helper.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'package:flutter/material.dart';
 
-class Item {
-  final int id;
-  final String user;
-  final String cnpj;
-  final String serialNumber;
-  final String name;
-  final int number;
-  final String supplier;
-  final String model;
-  final String type;
-  final String description;
-  final String incidentState;
-  final String location;
-  final String observations;
+class Item extends ChangeNotifier {
+  int id;
+  String user; // usuário que está preenchendo os dados
+  String cnpj; // cnpj da empresa do cliente
+  String serialNumber; // número de série do produto (caso exista)
+  String name; // placa antiga
+  int number; // número novo
+  String supplier; // fornecedor
+  String model; // modelo
+  String type; // categoria do produto
+  String description; // descrição do produto
+  String incidentState; // estado de uso
+  String location; // localização
+  String observations; // observações
 
   Item({
     this.id,
@@ -46,7 +45,7 @@ class Item {
       'description': description,
       'incidentState': incidentState,
       'location': location,
-      'observations': observations, 
+      'observations': observations,
     };
   }
 }
