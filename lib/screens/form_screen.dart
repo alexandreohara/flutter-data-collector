@@ -135,7 +135,7 @@ class _FormScreenState extends State<FormScreen> {
                   InputField(
                     focusNode: supplierFocusNode,
                     controller: supplierController,
-                    labelText: 'Fornecedor',
+                    labelText: 'Fabricante',
                     isValid: true,
                   ),
                   SizedBox(

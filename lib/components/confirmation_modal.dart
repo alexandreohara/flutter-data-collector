@@ -53,7 +53,7 @@ class ConfirmationModal extends StatelessWidget {
                 style: theme.textTheme.caption,
               ),
               Text(
-                'Fornecedor: ${item.supplier}',
+                'Fabricante: ${item.supplier}',
                 style: theme.textTheme.caption,
               ),
               Text(

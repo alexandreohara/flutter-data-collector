@@ -186,16 +186,11 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
 
   Future<void> _addToDatabase(Item item) async {
     if (item.id == null) {
-      print(item.id);
       final id = await dbHelper.insert(item.toMap());
       item.id = id;
-      print(item.id);
       return;
     }
     await dbHelper.update(item.toMap());
-    final todasLinhas = await dbHelper.queryAllRows();
-    print('Consulta todas as linhas:');
-    todasLinhas.forEach((row) => print(row));
   }
 
   void _openSuccessModal(Item item) {

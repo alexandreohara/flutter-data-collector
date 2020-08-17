@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:data_collector/components/alert_modal.dart';
 import 'package:data_collector/components/button.dart';
+import 'package:data_collector/csv_utils.dart';
 import 'package:data_collector/database_helper.dart';
 import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,19 +44,20 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Alterar Nome e CNPJ'),
+              title: Text('Exportar Dados'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/edit-identification');
+                _exportData();
+                //Navigator.pop(context);
+                //Navigator.pushNamed(context, '/edit-identification');
               },
             ),
-            // ListTile(
-            //   title: Text('Ver itens registrados'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, '/test-db');
-            //   },
-            // ),
+            ListTile(
+              title: Text('Ver itens registrados'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/test-db');
+              },
+            ),
           ],
         ),
       ),
@@ -152,5 +155,24 @@ class HomeScreen extends StatelessWidget {
         DatabaseHelper.description: row[5],
       });
     });
+  }
+
+  void _openLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void _exportData() async {
+    final dbHelper = DatabaseHelper.instance;
+    Future<Directory> directory = DownloadsPathProvider.downloadsDirectory;
+    final data = await dbHelper.queryAllRows();
+    final csv = mapListToCsv(data);
+    print(csv);
   }
 }

@@ -16,8 +16,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.red,
-          primaryColor: COLOR_PRIMARY,
-          errorColor: COLOR_ALERT_RED,
+          errorColor: COLOR_ALERT_YELLOW,
           fontFamily: 'Roboto',
           textTheme: textTheme,
         ),

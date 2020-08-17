@@ -5,7 +5,7 @@ const Color COLOR_PRIMARY = Color(0xFF262626);
 
 // Secondary
 const Color COLOR_ALERT_RED = Color(0xFFD73A21);
-const Color COLOR_ALERT_YELLOW = Color(0xFFFFCA04);
+const Color COLOR_ALERT_YELLOW = Color(0xFFF9C513);
 const Color COLOR_ALERT_GREEN = Color(0xFF11AF71);
 
 // Gray Scale
