@@ -107,7 +107,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     text: pictureName != null
                         ? 'Substituir foto'
                         : 'Adicionar foto',
-                    onPressed: () => _takePicture()),
+                    onPressed: () => _takePicture(item.number)),
                 SizedBox(
                   height: SPACING_48,
                 ),
@@ -141,11 +141,11 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
     return Image.asset('lib/assets/images/image-placeholder.png', height: 100);
   }
 
-  Future<void> _takePicture() async {
+  Future<void> _takePicture(int number) async {
     if (pictureName == null) {
       DateTime today = DateTime.now();
       pictureName =
-          '${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}-Numero_De_Serie.png';
+          '${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}-$number.png';
     }
     var cameraResult = await Camera().takePicture(pictureName);
     if (cameraResult != null) {
