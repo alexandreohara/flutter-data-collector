@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (passwordController.text == '1234') {
                       errorText = null;
-                      Navigator.pushNamed(context, '/');
+                      Navigator.pushNamed(context, '/home');
                     } else {
                       setState(() {
                         errorText = 'Senha incorreta';
