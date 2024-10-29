@@ -1,4 +1,4 @@
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:data_collector/components/button.dart';
 import 'package:data_collector/components/helpers.dart';
 import 'package:data_collector/components/input_field.dart';
@@ -74,7 +74,7 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                   Text(
                     'Preencha os dados abaixo',
-                    style: theme.textTheme.headline5,
+                    style: theme.textTheme.headlineSmall,
                   ),
                   SizedBox(
                     height: SPACING_16,
@@ -162,7 +162,7 @@ class _FormScreenState extends State<FormScreen> {
                   PrimaryButton(
                     text: 'Continuar',
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         item.name = oldNumberController.text;
                         item.number = int.parse(newNumberController.text);
                         item.supplier = supplierController.text;
@@ -185,6 +185,6 @@ class _FormScreenState extends State<FormScreen> {
 
   Future<String> handleScan() async {
     var result = await BarcodeScanner.scan();
-    return result?.rawContent ?? '';
+    return result.rawContent;
   }
 }

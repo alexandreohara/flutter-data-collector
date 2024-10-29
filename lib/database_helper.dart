@@ -8,7 +8,7 @@ class DatabaseHelper {
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
-  static Database _database;
+  late Database _database;
 
   static final tableName = 'item';
   static final columnId = 'id';
@@ -26,7 +26,6 @@ class DatabaseHelper {
   static final observation = 'observation';
 
   Future<Database> getDatabase() async {
-    if (_database != null) return _database;
     _database = await _initDatabase();
     return _database;
   }
@@ -38,7 +37,6 @@ class DatabaseHelper {
   }
 
   Future<Database> get database async {
-    if (_database != null) return _database;
     _database = await _initDatabase();
     return _database;
   }
@@ -68,7 +66,7 @@ class DatabaseHelper {
     return await db.query(tableName);
   }
 
-  Future<int> queryRowCount() async {
+  Future<int?> queryRowCount() async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
@@ -76,13 +74,15 @@ class DatabaseHelper {
 
   Future<int> insert(Map<String, dynamic> row) async {
     Database db = await instance.database;
-    return await db.insert(tableName, row, conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db.insert(tableName, row,
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> update(Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row[columnId];
-    return await db.update(tableName, row, where: '$columnId = ?', whereArgs: [id]);
+    return await db
+        .update(tableName, row, where: '$columnId = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {

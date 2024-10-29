@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 class AlertModal extends StatelessWidget {
   const AlertModal({
-    this.title,
-    this.content,
-    @required this.onSubmit,
-    @required this.onCancel,
+    required this.title,
+    this.content = "",
+    required this.onSubmit,
+    required this.onCancel,
   });
 
   final Widget title;
   final String content;
-  final Function onSubmit;
-  final Function onCancel;
+  final VoidCallback onSubmit;
+  final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +21,21 @@ class AlertModal extends StatelessWidget {
 
     return AlertDialog(
       title: title,
-      titleTextStyle: theme.textTheme.headline6,
+      titleTextStyle: theme.textTheme.displayLarge,
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text('Sim'),
           onPressed: onSubmit,
         ),
-        FlatButton(
+        TextButton(
           child: Text('Cancelar'),
-          textColor: COLOR_GRAY_4,
+          style:
+              TextButton.styleFrom(textStyle: TextStyle(color: COLOR_GRAY_4)),
           onPressed: onCancel,
         )
       ],
       actionsPadding: EdgeInsets.symmetric(horizontal: SPACING_8),
-      content: Text(content ?? ''),
+      content: Text(content),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(BORDER_RADIUS_8),
       ),

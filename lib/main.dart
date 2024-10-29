@@ -1,4 +1,3 @@
-import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/fonts.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/routes.dart';
@@ -16,7 +15,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.red,
-          errorColor: COLOR_ALERT_YELLOW,
           fontFamily: 'Roboto',
           textTheme: textTheme,
         ),

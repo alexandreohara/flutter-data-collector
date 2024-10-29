@@ -87,7 +87,7 @@ class TestDatabase extends StatelessWidget {
 
   void _delete() async {
     final id = await dbHelper.queryRowCount();
-    final linhaDeletada = await dbHelper.delete(id);
+    final linhaDeletada = await dbHelper.delete(id!);
     print('Deletada(s) $linhaDeletada linha(s): linha $id');
   }
 }

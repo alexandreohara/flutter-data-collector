@@ -18,18 +18,18 @@ class InputField extends StatelessWidget {
     this.obscureText,
   });
 
-  final String labelText;
-  final String hintText;
-  final String errorText;
-  final bool isValid;
+  final String? labelText;
+  final String? hintText;
+  final String? errorText;
+  final bool? isValid;
   final dynamic controller;
-  final FocusNode focusNode;
-  final TextInputType keyboardType;
-  final Function onChanged;
-  final int maxLength;
-  final List<TextInputFormatter> inputFormatters;
-  final String Function(String) validator;
-  final bool obscureText;
+  final FocusNode? focusNode;
+  final TextInputType? keyboardType;
+  final ValueChanged? onChanged;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
+  final FormFieldValidator? validator;
+  final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {

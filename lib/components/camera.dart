@@ -10,17 +10,17 @@ const ANDROID_DIRECTORY_PATH =
 class Camera {
   var picker = ImagePicker();
 
-  Future<File> takePicture([String pictureName]) async {
+  Future<File?> takePicture([String? pictureName]) async {
     var status = await _askPermission();
     if (status == PermissionStatus.granted) {
       var picture = await _imageSelectorCamera();
-      if (picture == null && Platform.isAndroid) {
+      if (picture != null && Platform.isAndroid) {
         _deleteIncorrectFile();
         print('user gave up taking picture');
         return null;
       }
       if (pictureName?.isNotEmpty ?? false) {
-        String dir = path.dirname(picture.path);
+        String dir = path.dirname(picture!.path);
         String newPath = path.join(dir, pictureName);
         File renamedFile = await File(picture.path).copy(newPath);
         File(picture.path).delete();
@@ -33,13 +33,11 @@ class Camera {
   }
 
   Future<PermissionStatus> _askPermission() async {
-    var restult =
-        await PermissionHandler().requestPermissions([PermissionGroup.camera]);
-    return restult[PermissionGroup.camera];
+    return await Permission.camera.request();
   }
 
-  Future<PickedFile> _imageSelectorCamera() async {
-    return picker.getImage(source: ImageSource.camera);
+  Future<XFile?> _imageSelectorCamera() async {
+    return picker.pickImage(source: ImageSource.camera);
   }
 
   Future<void> _deleteIncorrectFile() async {
