@@ -16,11 +16,13 @@ class InputField extends StatelessWidget {
     this.inputFormatters,
     this.validator,
     this.obscureText,
+    this.initialValue,
   });
 
   final String? labelText;
   final String? hintText;
   final String? errorText;
+  final String? initialValue;
   final bool? isValid;
   final dynamic controller;
   final FocusNode? focusNode;
@@ -37,6 +39,7 @@ class InputField extends StatelessWidget {
     return TextFormField(
       validator: this.validator,
       maxLength: maxLength,
+      initialValue: initialValue,
       decoration: InputDecoration(
         counterText: '',
         labelText: labelText ?? '',
