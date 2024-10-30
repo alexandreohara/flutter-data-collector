@@ -91,6 +91,7 @@ class _FormScreenState extends State<FormScreen> {
                       IconButton(
                         icon: Image.asset(
                           'lib/assets/icons/barcode-scanner.png',
+                          width: 32,
                         ),
                         onPressed: () async =>
                             oldNumberController.text = await handleScan(),
@@ -114,6 +115,7 @@ class _FormScreenState extends State<FormScreen> {
                       IconButton(
                         icon: Image.asset(
                           'lib/assets/icons/barcode-scanner.png',
+                          width: 32,
                         ),
                         onPressed: () async =>
                             newNumberController.text = await handleScan(),
