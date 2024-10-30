@@ -26,7 +26,7 @@ class PrimaryButton extends StatelessWidget {
         backgroundColor: theme.primaryColor,
       ),
       child: Padding(
-        padding: EdgeInsets.all(SPACING_16),
+        padding: EdgeInsets.all(SPACING_8),
         child: Text(
           text,
           style: theme.textTheme.bodyMedium!
@@ -59,13 +59,13 @@ class SecondaryButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
         ),
-        backgroundColor: theme.primaryColor,
+        backgroundColor: COLOR_WHITE,
       ),
       child: Padding(
         padding: EdgeInsets.all(SPACING_16),
         child: Text(
           text,
-          style: theme.textTheme.labelLarge!
+          style: theme.textTheme.bodyMedium!
               .copyWith(color: color ?? theme.primaryColor),
         ),
       ),

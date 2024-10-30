@@ -14,7 +14,7 @@ class Camera {
     var status = await _askPermission();
     if (status == PermissionStatus.granted) {
       var picture = await _imageSelectorCamera();
-      if (picture != null && Platform.isAndroid) {
+      if (picture == null && Platform.isAndroid) {
         _deleteIncorrectFile();
         print('user gave up taking picture');
         return null;

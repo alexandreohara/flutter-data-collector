@@ -58,7 +58,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 Text(
                   'Qual o estado do item?',
-                  style: theme.textTheme.displayMedium,
+                  style: theme.textTheme.headlineSmall,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -98,7 +98,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 Text(
                   'Adicionar foto?',
-                  style: theme.textTheme.displayMedium,
+                  style: theme.textTheme.headlineSmall,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -125,6 +125,9 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                         .popUntil(ModalRoute.withName('/home'));
                   },
                 ),
+                SizedBox(
+                  height: SPACING_48,
+                ),
               ],
             ),
           ),
@@ -142,9 +145,13 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   }
 
   Future<void> _takePicture() async {
-    var cameraResult = await Camera().takePicture(pictureName);
-    setState(() {
-      picture = cameraResult;
+    pictureName = "teste.jpg";
+    Camera().takePicture(pictureName).then((File? file) {
+      if (mounted) {
+        setState(() {
+          picture = file;
+        });
+      }
     });
   }
 }

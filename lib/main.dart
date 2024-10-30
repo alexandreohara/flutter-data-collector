@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
       value: Item(),
       child: MaterialApp(
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red)
+              .copyWith(surface: Colors.white),
           fontFamily: 'Roboto',
           textTheme: textTheme,
         ),
