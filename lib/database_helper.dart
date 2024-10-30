@@ -89,4 +89,16 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
   }
+
+  Future<List<Map<String, dynamic>>> queryRowsPaginated(
+      int page, int pageSize) async {
+    Database db = await instance.database;
+    int offset = (page - 1) * pageSize;
+    return await db.query(
+      tableName,
+      limit: pageSize,
+      offset: offset,
+      orderBy: columnId,
+    );
+  }
 }
