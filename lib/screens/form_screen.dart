@@ -50,7 +50,6 @@ class _FormScreenState extends State<FormScreen> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  item.name = null;
                   item.number = null;
                   item.supplier = null;
                   item.model = null;
