@@ -57,6 +57,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
+                    initialValue: 'teste',
                     validator: (value) => requiredValidator(value),
                     maxLength: 10,
                     focusNode: userFocusNode,
@@ -68,6 +69,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
+                    initialValue: '41.684.544/0001-05',
                     validator: (value) {
                       return multiplesValidators(
                           value, [requiredValidator, cnpjValidator]);

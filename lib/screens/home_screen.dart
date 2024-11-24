@@ -79,15 +79,6 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: SPACING_32,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
-              child: OutlinedButton(
-                child: const Text('Carregar arquivo .csv'),
-                onPressed: () async {
-                  _showDialog(context);
-                },
-              ),
-            ),
           ],
         ),
       ),

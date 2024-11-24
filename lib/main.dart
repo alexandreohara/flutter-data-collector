@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Roboto',
           textTheme: textTheme,
         ),
-        initialRoute: '/identification',
+        initialRoute: '/home',
         onGenerateRoute: routes,
       ),
     );
