@@ -133,7 +133,6 @@ class HomeScreen extends StatelessWidget {
     csv.removeAt(0);
     csv.forEach((row) async {
       await dbHelper.insert({
-        DatabaseHelper.serialNumber: row[0],
         DatabaseHelper.name: row[1],
         DatabaseHelper.supplier: row[2],
         DatabaseHelper.model: row[3],

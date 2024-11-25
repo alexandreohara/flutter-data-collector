@@ -65,7 +65,7 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
                   isThreeLine: true,
                   title: Text(item[DatabaseHelper.name] ?? 'Sem Nome'),
                   subtitle: Text(
-                      "${item[DatabaseHelper.serialNumber]} \n${item[DatabaseHelper.description]}"),
+                      "${item[DatabaseHelper.number]} \n${item[DatabaseHelper.description]}"),
                 );
               },
             ),

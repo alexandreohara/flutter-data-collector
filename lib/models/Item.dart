@@ -4,7 +4,6 @@ class Item extends ChangeNotifier {
   int? id;
   String? user; // usuário que está preenchendo os dados
   String? cnpj; // cnpj da empresa do cliente
-  String? serialNumber; // número de série do produto (caso exista)
   int? number; // número novo
   String? supplier; // fornecedor
   String? model; // modelo
@@ -18,7 +17,6 @@ class Item extends ChangeNotifier {
     this.id,
     this.user,
     this.cnpj,
-    this.serialNumber,
     this.number,
     this.supplier,
     this.model,
@@ -34,7 +32,6 @@ class Item extends ChangeNotifier {
       'id': id,
       'user': user,
       'cnpj': cnpj,
-      'serialNumber': serialNumber,
       'number': number,
       'supplier': supplier,
       'model': model,

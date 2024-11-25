@@ -61,7 +61,6 @@ class TestDatabase extends StatelessWidget {
       DatabaseHelper.user: 'Demetrio',
       DatabaseHelper.cnpj: 12345678901234,
       DatabaseHelper.name: 'Leandro',
-      DatabaseHelper.serialNumber: 3013232,
       DatabaseHelper.description: "Descrição"
     };
     final id = await dbHelper.insert(row);
