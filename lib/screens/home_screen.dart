@@ -85,49 +85,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  void _showDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertModal(
-          title: Center(
-            child: Icon(
-              Icons.warning,
-              color: COLOR_ALERT_YELLOW,
-              size: 72,
-            ),
-          ),
-          content:
-              'Os dados devem ser carregados apenas na primeira vez. Deseja fazer isso?',
-          onSubmit: () async {
-            File file;
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowedExtensions: ['csv'],
-            );
-            if (result != null) {
-              file = File(result.files.single.path!);
-              List<List<dynamic>> csv = await file
-                  .openRead()
-                  .transform(utf8.decoder)
-                  .transform(CsvToListConverter(
-                    fieldDelimiter: ';',
-                    textDelimiter: '"',
-                    textEndDelimiter: '"',
-                  ))
-                  .toList();
-              await _insert(csv);
-              Navigator.of(context).pop();
-            }
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
-  }
-
   Future<void> _insert(List<List<dynamic>> csv) async {
     final dbHelper = DatabaseHelper.instance;
     csv.removeAt(0);
