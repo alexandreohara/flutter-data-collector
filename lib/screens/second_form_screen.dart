@@ -18,7 +18,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   final TextEditingController locationController = TextEditingController();
   final FocusNode observationFocusNode = FocusNode();
   final TextEditingController observationController = TextEditingController();
-  double _value = 0;
+  double _value = 100;
 
   File? picture;
   String? pictureName;
@@ -63,16 +63,19 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 SizedBox(
                   height: SPACING_16,
                 ),
-                Slider(
-                  value: _value,
-                  label: "${_value.round()}",
-                  divisions: 4,
-                  min: 0,
-                  max: 100,
-                  onChanged: (newValue) {
-                    setState(() => _value = newValue);
-                  },
-                ),
+                StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return Slider(
+                    value: _value,
+                    label: "${_value.round()}",
+                    divisions: 4,
+                    min: 0,
+                    max: 100,
+                    onChanged: (newValue) {
+                      setState(() => _value = newValue);
+                    },
+                  );
+                }),
                 SizedBox(
                   height: SPACING_16,
                 ),
@@ -121,8 +124,10 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.incidentState = '${_value.round()}';
                     item.location = locationController.text;
                     item.observations = observationController.text;
-                    Navigator.of(context)
-                        .popUntil(ModalRoute.withName('/home'));
+                    showConfirmationDialog(context,
+                        item: item, onConfirm: () {}, onCancel: () {});
+                    // Navigator.of(context)
+                    //     .popUntil(ModalRoute.withName('/home'));
                   },
                 ),
                 SizedBox(
@@ -154,4 +159,47 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
       }
     });
   }
+}
+
+void showConfirmationDialog(
+  BuildContext context, {
+  required Item item,
+  required VoidCallback onConfirm,
+  required VoidCallback onCancel,
+}) {
+  String displayValue(String? value) => value ?? '-';
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirme os dados:'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Placa: ${displayValue(item.number?.toString())}'),
+              Text('Fornecedor: ${displayValue(item.supplier)}'),
+              Text('Modelo: ${displayValue(item.model)}'),
+              Text('Tipo: ${displayValue(item.type)}'),
+              Text('Descrição: ${displayValue(item.description)}'),
+              Text('Estado do item: ${displayValue(item.incidentState)}'),
+              Text('Location: ${displayValue(item.location)}'),
+              Text('Observations: ${displayValue(item.observations)}'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: onCancel,
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: onConfirm,
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
 }
