@@ -131,6 +131,7 @@ class _FormScreenState extends State<FormScreen> {
                     controller: descriptionController,
                     labelText: 'Descrição',
                     isValid: true,
+                    maxLength: 100,
                   ),
                   SizedBox(
                     height: SPACING_48,

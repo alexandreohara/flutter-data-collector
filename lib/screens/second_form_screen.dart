@@ -85,6 +85,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                   controller: locationController,
                   labelText: 'Localização',
                   isValid: true,
+                  maxLength: 100,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -95,6 +96,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                   controller: observationController,
                   labelText: 'Observações',
                   isValid: true,
+                  maxLength: 100,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -167,7 +169,27 @@ void showConfirmationDialog(
   required VoidCallback onConfirm,
   required VoidCallback onCancel,
 }) {
-  String displayValue(String? value) => value ?? '-';
+  String displayValue(String? value) {
+    return (value == null || value.isEmpty) ? '-' : value;
+  }
+
+  Widget buildRichText(String label, String value) {
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodySmall,
+        children: [
+          TextSpan(
+            text: '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: value,
+            style: const TextStyle(fontWeight: FontWeight.normal),
+          ),
+        ],
+      ),
+    );
+  }
 
   showDialog(
     context: context,
@@ -178,14 +200,15 @@ void showConfirmationDialog(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Placa: ${displayValue(item.number?.toString())}'),
-              Text('Fornecedor: ${displayValue(item.supplier)}'),
-              Text('Modelo: ${displayValue(item.model)}'),
-              Text('Tipo: ${displayValue(item.type)}'),
-              Text('Descrição: ${displayValue(item.description)}'),
-              Text('Estado do item: ${displayValue(item.incidentState)}'),
-              Text('Location: ${displayValue(item.location)}'),
-              Text('Observations: ${displayValue(item.observations)}'),
+              buildRichText('Placa', displayValue(item.number.toString())),
+              buildRichText('Fornecedor', displayValue(item.supplier)),
+              buildRichText('Modelo', displayValue(item.model)),
+              buildRichText('Tipo', displayValue(item.type)),
+              buildRichText('Descrição', displayValue(item.description)),
+              buildRichText(
+                  'Estado do item', '${displayValue(item.incidentState)}%'),
+              buildRichText('Localização', displayValue(item.location)),
+              buildRichText('Observações', displayValue(item.observations)),
             ],
           ),
         ),

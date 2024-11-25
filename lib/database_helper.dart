@@ -14,7 +14,6 @@ class DatabaseHelper {
   static final columnId = 'id';
   static final user = 'user';
   static final cnpj = 'cnpj';
-  static final serialNumber = 'serialNumber';
   static final name = 'name';
   static final number = 'number';
   static final supplier = 'supplier';
@@ -47,7 +46,6 @@ class DatabaseHelper {
             $columnId INTEGER PRIMARY KEY,
             $user TEXT,
             $cnpj INTEGER,
-            $serialNumber TEXT,
             $name TEXT,
             $number INTEGER,
             $supplier TEXT,

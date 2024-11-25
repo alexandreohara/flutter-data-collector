@@ -15,6 +15,7 @@ class InputField extends StatelessWidget {
     this.maxLength,
     this.inputFormatters,
     this.validator,
+    this.buildCounter,
     this.obscureText,
     this.initialValue,
   });
@@ -31,6 +32,7 @@ class InputField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator? validator;
+  final InputCounterWidgetBuilder? buildCounter;
   final bool? obscureText;
 
   @override
@@ -41,7 +43,6 @@ class InputField extends StatelessWidget {
       maxLength: maxLength,
       initialValue: initialValue,
       decoration: InputDecoration(
-        counterText: '',
         labelText: labelText ?? '',
         hintText: hintText ?? '',
         errorText: errorText ?? null,
@@ -57,6 +58,7 @@ class InputField extends StatelessWidget {
           ),
         ),
       ),
+      buildCounter: buildCounter,
       focusNode: focusNode,
       controller: controller,
       keyboardType: keyboardType ?? TextInputType.text,
