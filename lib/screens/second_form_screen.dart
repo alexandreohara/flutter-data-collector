@@ -127,7 +127,9 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.location = locationController.text;
                     item.observations = observationController.text;
                     showConfirmationDialog(context,
-                        item: item, onConfirm: () {}, onCancel: () {});
+                        item: item,
+                        onConfirm: () {},
+                        onCancel: Navigator.of(context).pop);
                     // Navigator.of(context)
                     //     .popUntil(ModalRoute.withName('/home'));
                   },
