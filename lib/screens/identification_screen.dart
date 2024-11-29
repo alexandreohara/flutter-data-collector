@@ -6,6 +6,7 @@ import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentificationScreen extends StatefulWidget {
   @override
@@ -16,9 +17,9 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode userFocusNode = FocusNode();
   final FocusNode cnpjFocusNode = FocusNode();
-  final userController = TextEditingController();
-  final maskedController =
-      MaskedTextController(mask: '00.000.000/0000-00', text: '');
+  final userController = TextEditingController(text: 'Demetrio');
+  final maskedController = MaskedTextController(
+      mask: '00.000.000/0000-00', text: '41.684.544/0001-05');
 
   @override
   void dispose() {
@@ -57,9 +58,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
-                    initialValue: 'teste',
                     validator: (value) => requiredValidator(value),
-                    maxLength: 10,
                     focusNode: userFocusNode,
                     controller: userController,
                     labelText: 'Nome',
@@ -69,7 +68,6 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_16,
                   ),
                   InputField(
-                    initialValue: '41.684.544/0001-05',
                     validator: (value) {
                       return multiplesValidators(
                           value, [requiredValidator, cnpjValidator]);
@@ -86,10 +84,12 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                   ),
                   PrimaryButton(
                     text: 'Coletar dados',
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        item.user = userController.text;
-                        item.cnpj = maskedController.text;
+                        item.setUserAndCNPJ(
+                            userController.text, maskedController.text);
+                        await _savePreferences(
+                            userController.text, maskedController.text);
                         Navigator.pushNamed(context, '/', arguments: item);
                       }
                     },
@@ -101,5 +101,11 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _savePreferences(String user, String cnpj) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', user);
+    await prefs.setString('cnpj', cnpj);
   }
 }

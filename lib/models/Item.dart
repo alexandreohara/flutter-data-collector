@@ -42,4 +42,10 @@ class Item extends ChangeNotifier {
       'observations': observations,
     };
   }
+
+  void setUserAndCNPJ(String user, String cnpj) {
+    this.user = user;
+    this.cnpj = cnpj;
+    notifyListeners();
+  }
 }
