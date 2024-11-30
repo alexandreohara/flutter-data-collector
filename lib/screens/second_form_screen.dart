@@ -34,6 +34,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var item = Provider.of<Item>(context);
+    print(item.cnpj);
+    print(item.supplier);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
