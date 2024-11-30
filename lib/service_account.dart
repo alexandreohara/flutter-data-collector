@@ -21,8 +21,6 @@ class AuthService with ChangeNotifier {
       ];
 
       _client = await clientViaServiceAccount(credentials, scopes);
-      print("PASSEI AQUI");
-      print(_client);
       notifyListeners();
     } catch (e) {
       print('Authentication failed: $e');
