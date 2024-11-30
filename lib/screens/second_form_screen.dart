@@ -20,8 +20,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   final TextEditingController observationController = TextEditingController();
   double _value = 0;
 
-  File picture;
-  String pictureName;
+  File? picture;
+  String? pictureName;
 
   @override
   void dispose() {
@@ -58,7 +58,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 Text(
                   'Qual o estado do item?',
-                  style: theme.textTheme.headline5,
+                  style: theme.textTheme.headlineSmall,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -98,7 +98,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                 ),
                 Text(
                   'Adicionar foto?',
-                  style: theme.textTheme.headline5,
+                  style: theme.textTheme.headlineSmall,
                 ),
                 SizedBox(
                   height: SPACING_16,
@@ -125,6 +125,9 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                         .popUntil(ModalRoute.withName('/home'));
                   },
                 ),
+                SizedBox(
+                  height: SPACING_48,
+                ),
               ],
             ),
           ),
@@ -135,23 +138,20 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
 
   Widget _pictureOrPlaceholder() {
     if (picture != null) {
-      var bytes = picture.readAsBytesSync();
+      var bytes = picture!.readAsBytesSync();
       return Image.memory(bytes, height: 300);
     }
     return Image.asset('lib/assets/images/image-placeholder.png', height: 100);
   }
 
   Future<void> _takePicture() async {
-    if (pictureName == null) {
-      DateTime today = DateTime.now();
-      pictureName =
-          '${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}-Numero_De_Serie.png';
-    }
-    var cameraResult = await Camera().takePicture(pictureName);
-    if (cameraResult != null) {
-      setState(() {
-        picture = cameraResult;
-      });
-    }
+    pictureName = "teste.jpg";
+    Camera().takePicture(pictureName).then((File? file) {
+      if (mounted) {
+        setState(() {
+          picture = file;
+        });
+      }
+    });
   }
 }

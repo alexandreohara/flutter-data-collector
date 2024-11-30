@@ -4,7 +4,7 @@ import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
 
 class IdentificationScreen extends StatefulWidget {
@@ -47,11 +47,11 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                   ),
                   Text(
                     'Antes de começar, digite o seu nome e o CNPJ do cliente',
-                    style: theme.textTheme.headline5,
+                    style: theme.textTheme.headlineSmall,
                   ),
                   Text(
                     'Você poderá alterar essas informações futuramente',
-                    style: theme.textTheme.bodyText2,
+                    style: theme.textTheme.bodyMedium,
                   ),
                   SizedBox(
                     height: SPACING_16,
@@ -85,7 +85,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                   PrimaryButton(
                     text: 'Coletar dados',
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         item.user = userController.text;
                         item.cnpj = maskedController.text;
                         Navigator.pushNamed(context, '/', arguments: item);

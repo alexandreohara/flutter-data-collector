@@ -4,31 +4,33 @@ import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
-    this.text,
+    this.text = "",
     this.textColor,
-    @required this.onPressed,
+    required this.onPressed,
   });
 
   final String text;
-  final Color textColor;
-  final Function onPressed;
+  final Color? textColor;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return FlatButton(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
+    return TextButton(
+      style: TextButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
+        ),
+        backgroundColor: theme.primaryColor,
       ),
-      color: theme.primaryColor,
       child: Padding(
-        padding: EdgeInsets.all(SPACING_16),
+        padding: EdgeInsets.all(SPACING_8),
         child: Text(
           text,
-          style:
-              theme.textTheme.button.copyWith(color: textColor ?? COLOR_WHITE),
+          style: theme.textTheme.bodyMedium!
+              .copyWith(color: textColor ?? COLOR_WHITE),
         ),
       ),
       onPressed: onPressed,
@@ -38,30 +40,32 @@ class PrimaryButton extends StatelessWidget {
 
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
-    this.text,
+    required this.text,
     this.color,
-    @required this.onPressed,
+    required this.onPressed,
   });
 
   final String text;
-  final Color color;
-  final Function onPressed;
+  final Color? color;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return OutlineButton(
-      borderSide: BorderSide(color: color ?? theme.primaryColor),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: color ?? theme.primaryColor),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(BORDER_RADIUS_32),
+        ),
+        backgroundColor: COLOR_WHITE,
       ),
-      color: theme.primaryColor,
       child: Padding(
         padding: EdgeInsets.all(SPACING_16),
         child: Text(
           text,
-          style: theme.textTheme.button
+          style: theme.textTheme.bodyMedium!
               .copyWith(color: color ?? theme.primaryColor),
         ),
       ),

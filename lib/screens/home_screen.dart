@@ -25,13 +25,14 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             Consumer<Item>(
-                builder: (BuildContext context, Item item, Widget child) {
+                builder: (BuildContext context, Item item, Widget? child) {
               return UserAccountsDrawerHeader(
                 accountName: Text(
-                  item.user,
-                  style: theme.textTheme.headline6.copyWith(color: COLOR_WHITE),
+                  item.user ?? "user",
+                  style:
+                      theme.textTheme.titleLarge!.copyWith(color: COLOR_WHITE),
                 ),
-                accountEmail: Text(item.cnpj),
+                accountEmail: Text(item.cnpj ?? "cnpj"),
               );
             }),
             ListTile(
@@ -80,8 +81,8 @@ class HomeScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
-              child: SecondaryButton(
-                text: 'Carregar arquivo .csv',
+              child: OutlinedButton(
+                child: const Text('Carregar arquivo .csv'),
                 onPressed: () async {
                   _showDialog(context);
                 },
@@ -108,21 +109,25 @@ class HomeScreen extends StatelessWidget {
           content:
               'Os dados devem ser carregados apenas na primeira vez. Deseja fazer isso?',
           onSubmit: () async {
-            File file = await FilePicker.getFile(
+            File file;
+            FilePickerResult? result = await FilePicker.platform.pickFiles(
               type: FileType.custom,
               allowedExtensions: ['csv'],
             );
-            List<List<dynamic>> csv = await file
-                .openRead()
-                .transform(utf8.decoder)
-                .transform(CsvToListConverter(
-                  fieldDelimiter: ';',
-                  textDelimiter: '"',
-                  textEndDelimiter: '"',
-                ))
-                .toList();
-            await _insert(csv);
-            Navigator.of(context).pop();
+            if (result != null) {
+              file = File(result.files.single.path!);
+              List<List<dynamic>> csv = await file
+                  .openRead()
+                  .transform(utf8.decoder)
+                  .transform(CsvToListConverter(
+                    fieldDelimiter: ';',
+                    textDelimiter: '"',
+                    textEndDelimiter: '"',
+                  ))
+                  .toList();
+              await _insert(csv);
+              Navigator.of(context).pop();
+            }
           },
           onCancel: () {
             Navigator.of(context).pop();
