@@ -5,6 +5,7 @@ import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,6 +123,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
       await prefs.setString('cnpj', cnpj);
       Provider.of<AuthService>(context, listen: false)
           .createOrFetchFolder(cnpj);
+      Provider.of<AuthService>(context, listen: false)
+          .createOrFetchSheets(dotenv.env['PARENT_ID']!, 'Dados - $cnpj');
     } catch (e) {
       print('Error saving preferences: $e');
     }
