@@ -1,5 +1,5 @@
 import 'package:data_collector/components/button.dart';
-import 'package:data_collector/database_helper.dart';
+import 'package:data_collector/utils/database_helper.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
