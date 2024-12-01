@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Item extends ChangeNotifier {
-  int? id;
+  String? id;
   String? user; // usuário que está preenchendo os dados
   String? cnpj; // cnpj da empresa do cliente
   int? number; // número novo
@@ -42,6 +42,19 @@ class Item extends ChangeNotifier {
       'observations': observations,
     };
   }
+
+  static List<String> getFields() => [
+        'ID',
+        'Número',
+        'Fornecedor',
+        'Modelo',
+        'Tipo',
+        'Descrição',
+        'Estado',
+        'Localização',
+        'Observações',
+        'Usuário',
+      ];
 
   void setUserAndCNPJ(String user, String cnpj) {
     this.user = user;
