@@ -18,16 +18,15 @@ class AuthService with ChangeNotifier {
   Future<void> authenticate() async {
     try {
       final jsonCredentials = jsonDecode(dotenv.env['SERVICE_ACCOUNT_KEY']!);
-      final credentials =
-          ServiceAccountCredentials.fromJson(json.decode(jsonCredentials));
+      final credentials = ServiceAccountCredentials.fromJson(jsonCredentials);
       final scopes = [
         drive.DriveApi.driveScope,
         sheets.SheetsApi.spreadsheetsScope,
       ];
 
-      final client = await clientViaServiceAccount(credentials, scopes);
-      _driveApi = drive.DriveApi(client);
-      _sheetsApi = sheets.SheetsApi(client);
+      _client = await clientViaServiceAccount(credentials, scopes);
+      _driveApi = drive.DriveApi(_client!);
+      _sheetsApi = sheets.SheetsApi(_client!);
       notifyListeners();
     } catch (e) {
       print('Authentication failed: $e');
@@ -41,7 +40,11 @@ class AuthService with ChangeNotifier {
     final query =
         "name = '$folderName' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
     final fileList = await driveApi.files.list(
-        q: query, spaces: 'drive', $fields: 'files(id, name)', pageSize: 1);
+        q: query,
+        spaces: 'drive',
+        $fields: 'files(id, name, parents, trashed)',
+        pageSize: 1);
+    print(fileList.files!.first.parents);
 
     if (fileList.files != null && fileList.files!.isNotEmpty) {
       return fileList.files!.first;
@@ -53,6 +56,7 @@ class AuthService with ChangeNotifier {
     final folderMetadata = drive.File();
     folderMetadata.name = folderName;
     folderMetadata.mimeType = 'application/vnd.google-apps.folder';
+    folderMetadata.parents = [dotenv.env['PARENT_ID']!];
 
     final folder = await driveApi.files.create(
       folderMetadata,
@@ -62,12 +66,10 @@ class AuthService with ChangeNotifier {
     return folder;
   }
 
-  Future<sheets.Spreadsheet> createOrFetchSheets(
+  Future<drive.File> createOrFetchSheets(
       String folderId, String sheetName) async {
     final driveApi = await _authenticateDrive();
-    final sheetsApi = await _authenticateSheets();
 
-    // Check if a sheet with the given name exists inside the specified folder
     final query =
         "'$folderId' in parents and name = '$sheetName' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false";
 
@@ -78,24 +80,17 @@ class AuthService with ChangeNotifier {
       final existingFile = fileList.files!.first;
       print(
           'Sheet already exists: ${existingFile.name}, ID: ${existingFile.id}');
-      return sheetsApi.spreadsheets.get(existingFile.id!);
+      return existingFile;
     }
 
-    final spreadsheet = sheets.Spreadsheet()
-      ..properties = sheets.SpreadsheetProperties(title: sheetName);
+    final sheetMetadata = drive.File()
+      ..name = sheetName
+      ..mimeType = 'application/vnd.google-apps.spreadsheet'
+      ..parents = [folderId];
 
-    final newSpreadsheet = await sheetsApi.spreadsheets.create(spreadsheet);
+    final newSpreadsheet = await driveApi.files
+        .create(sheetMetadata, $fields: 'id, name, mimeType, parents');
 
-    await driveApi.files.update(
-      drive.File(parents: [folderId]),
-      newSpreadsheet.spreadsheetId!,
-      addParents: folderId,
-      removeParents: 'root',
-      $fields: 'id, parents',
-    );
-
-    print(
-        'Created new sheet: ${newSpreadsheet.properties?.title}, ID: ${newSpreadsheet.spreadsheetId}');
     return newSpreadsheet;
   }
 

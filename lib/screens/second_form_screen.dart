@@ -5,7 +5,9 @@ import 'package:data_collector/components/camera.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
+import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class SecondFormScreen extends StatefulWidget {
@@ -34,8 +36,6 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var item = Provider.of<Item>(context);
-    print(item.cnpj);
-    print(item.supplier);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -128,10 +128,12 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.incidentState = '${_value.round()}';
                     item.location = locationController.text;
                     item.observations = observationController.text;
-                    showConfirmationDialog(context,
-                        item: item,
-                        onConfirm: () {},
-                        onCancel: Navigator.of(context).pop);
+                    showConfirmationDialog(context, item: item,
+                        onConfirm: () async {
+                      await Provider.of<AuthService>(context, listen: false)
+                          .createOrFetchSheets(dotenv.env['PARENT_ID']!, 'aaa');
+                      Navigator.of(context).pop();
+                    }, onCancel: Navigator.of(context).pop);
                     // Navigator.of(context)
                     //     .popUntil(ModalRoute.withName('/home'));
                   },

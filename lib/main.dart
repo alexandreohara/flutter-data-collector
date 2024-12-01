@@ -3,11 +3,13 @@ import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/routes.dart';
 import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),
