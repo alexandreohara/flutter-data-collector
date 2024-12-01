@@ -4,7 +4,7 @@ class Item extends ChangeNotifier {
   String? id;
   String? user; // usuário que está preenchendo os dados
   String? cnpj; // cnpj da empresa do cliente
-  int? number; // número novo
+  String? number; // número novo
   String? supplier; // fornecedor
   String? model; // modelo
   String? type; // categoria do produto
@@ -41,6 +41,21 @@ class Item extends ChangeNotifier {
       'location': location,
       'observations': observations,
     };
+  }
+
+  List<String?> toRow() {
+    return [
+      id,
+      number,
+      supplier,
+      model,
+      type,
+      description,
+      incidentState,
+      location,
+      observations,
+      user,
+    ];
   }
 
   static List<String> getFields() => [

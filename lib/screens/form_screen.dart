@@ -142,7 +142,7 @@ class _FormScreenState extends State<FormScreen> {
                     text: 'Continuar',
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        item.number = int.parse(newNumberController.text);
+                        item.number = newNumberController.text;
                         item.supplier = supplierController.text;
                         item.model = modelController.text;
                         item.type = typeController.text;

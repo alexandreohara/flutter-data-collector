@@ -2,42 +2,54 @@ import 'dart:convert';
 import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:googleapis/drive/v3.dart';
-import 'package:googleapis/sheets/v4.dart' as sheets;
 import 'package:googleapis/sheets/v4.dart';
 import 'package:googleapis_auth/auth_io.dart';
 
 class AuthService with ChangeNotifier {
   AuthClient? _client;
-  drive.DriveApi? _driveApi;
-  sheets.SheetsApi? _sheetsApi;
-  drive.File? _folder;
-  drive.File? _sheet;
+  DriveApi? _driveApi;
+  SheetsApi? _sheetsApi;
+  File? _folder;
+  File? _sheet;
 
   AuthClient? get client => _client;
-  drive.DriveApi? get driveApi => _driveApi;
-  sheets.SheetsApi? get sheetsApi => _sheetsApi;
-  drive.File? get folder => _folder;
-  drive.File? get sheet => _sheet;
+  DriveApi? get driveApi => _driveApi;
+  SheetsApi? get sheetsApi => _sheetsApi;
+  File? get folder => _folder;
+  File? get sheet => _sheet;
 
   Future<void> authenticate() async {
     try {
       final jsonCredentials = jsonDecode(dotenv.env['SERVICE_ACCOUNT_KEY']!);
       final credentials = ServiceAccountCredentials.fromJson(jsonCredentials);
       final scopes = [
-        drive.DriveApi.driveScope,
-        sheets.SheetsApi.spreadsheetsScope,
+        DriveApi.driveScope,
+        SheetsApi.spreadsheetsScope,
       ];
 
       _client = await clientViaServiceAccount(credentials, scopes);
-      _driveApi = drive.DriveApi(_client!);
-      _sheetsApi = sheets.SheetsApi(_client!);
+      _driveApi = DriveApi(_client!);
+      _sheetsApi = SheetsApi(_client!);
       notifyListeners();
     } catch (e) {
       print('Authentication failed: $e');
       rethrow;
     }
+  }
+
+  Future<DriveApi> _authenticateDrive() async {
+    if (_driveApi == null) {
+      await authenticate();
+    }
+    return _driveApi!;
+  }
+
+  Future<SheetsApi> _authenticateSheets() async {
+    if (_sheetsApi == null) {
+      await authenticate();
+    }
+    return _sheetsApi!;
   }
 
   Future<String> createOrFetchFolder(String folderName) async {
@@ -60,8 +72,8 @@ class AuthService with ChangeNotifier {
     return _folder!.id ?? '';
   }
 
-  Future<drive.File> createFolder(DriveApi driveApi, String folderName) async {
-    final folderMetadata = drive.File();
+  Future<File> createFolder(DriveApi driveApi, String folderName) async {
+    final folderMetadata = File();
     folderMetadata.name = folderName;
     folderMetadata.mimeType = 'application/vnd.google-apps.folder';
     folderMetadata.parents = [dotenv.env['PARENT_ID']!];
@@ -92,7 +104,7 @@ class AuthService with ChangeNotifier {
         return existingFile.id!;
       }
 
-      final sheetMetadata = drive.File()
+      final sheetMetadata = File()
         ..name = sheetName
         ..mimeType = 'application/vnd.google-apps.spreadsheet'
         ..parents = [folderId];
@@ -112,7 +124,7 @@ class AuthService with ChangeNotifier {
   Future<void> addFields(SheetsApi sheetsApi, String spreadsheetId) async {
     try {
       final fields = Item.getFields();
-      final request = sheets.ValueRange(values: [fields]);
+      final request = ValueRange(values: [fields]);
       await sheetsApi.spreadsheets.values.update(
         request,
         spreadsheetId,
@@ -125,17 +137,22 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<drive.DriveApi> _authenticateDrive() async {
-    if (_driveApi == null) {
-      await authenticate();
-    }
-    return _driveApi!;
-  }
+  Future<void> addRowToSpreadsheet(
+      SheetsApi sheetsApi, String spreadsheetId, Item item) async {
+    try {
+      final row = item.toRow();
 
-  Future<sheets.SheetsApi> _authenticateSheets() async {
-    if (_sheetsApi == null) {
-      await authenticate();
+      await sheetsApi.spreadsheets.values.append(
+        ValueRange(values: [row]),
+        spreadsheetId,
+        'Sheet1', // Sheet name where the row will be added
+        valueInputOption: 'USER_ENTERED',
+      );
+
+      print('Row added successfully!');
+    } catch (e) {
+      print('Error adding row: $e');
+      rethrow;
     }
-    return _sheetsApi!;
   }
 }
