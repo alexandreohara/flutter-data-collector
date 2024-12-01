@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 class DateHelper {
-  // Method to create a timestamp formatted for file names
   static String createFileNameTimestamp() {
     final now = DateTime.now();
     final formatter =
