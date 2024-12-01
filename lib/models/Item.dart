@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Item extends ChangeNotifier {
-  String? id;
   String? user; // usuário que está preenchendo os dados
   String? cnpj; // cnpj da empresa do cliente
   String? number; // número novo
@@ -14,7 +13,6 @@ class Item extends ChangeNotifier {
   String? observations; // observações
 
   Item({
-    this.id,
     this.user,
     this.cnpj,
     this.number,
@@ -29,7 +27,6 @@ class Item extends ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'user': user,
       'cnpj': cnpj,
       'number': number,
@@ -45,7 +42,6 @@ class Item extends ChangeNotifier {
 
   List<String?> toRow() {
     return [
-      id,
       number,
       supplier,
       model,
@@ -59,8 +55,7 @@ class Item extends ChangeNotifier {
   }
 
   static List<String> getFields() => [
-        'ID',
-        'Número',
+        'Placa',
         'Fornecedor',
         'Modelo',
         'Tipo',

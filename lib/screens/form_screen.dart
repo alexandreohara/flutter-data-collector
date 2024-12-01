@@ -42,7 +42,6 @@ class _FormScreenState extends State<FormScreen> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var item = Provider.of<Item>(context);
-    item.id = DateTime.now().millisecondsSinceEpoch.toString();
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -51,7 +50,6 @@ class _FormScreenState extends State<FormScreen> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  item.id = null;
                   item.number = null;
                   item.supplier = null;
                   item.model = null;
