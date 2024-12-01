@@ -1,35 +1,37 @@
+import 'dart:io';
 import 'dart:convert';
 import 'package:data_collector/models/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:googleapis/drive/v3.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:googleapis/sheets/v4.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:mime/mime.dart';
 
 class AuthService with ChangeNotifier {
   AuthClient? _client;
-  DriveApi? _driveApi;
+  drive.DriveApi? _driveApi;
   SheetsApi? _sheetsApi;
-  File? _folder;
-  File? _sheet;
+  drive.File? _folder;
+  drive.File? _sheet;
 
   AuthClient? get client => _client;
-  DriveApi? get driveApi => _driveApi;
+  drive.DriveApi? get driveApi => _driveApi;
   SheetsApi? get sheetsApi => _sheetsApi;
-  File? get folder => _folder;
-  File? get sheet => _sheet;
+  drive.File? get folder => _folder;
+  drive.File? get sheet => _sheet;
 
   Future<void> authenticate() async {
     try {
       final jsonCredentials = jsonDecode(dotenv.env['SERVICE_ACCOUNT_KEY']!);
       final credentials = ServiceAccountCredentials.fromJson(jsonCredentials);
       final scopes = [
-        DriveApi.driveScope,
+        drive.DriveApi.driveScope,
         SheetsApi.spreadsheetsScope,
       ];
 
       _client = await clientViaServiceAccount(credentials, scopes);
-      _driveApi = DriveApi(_client!);
+      _driveApi = drive.DriveApi(_client!);
       _sheetsApi = SheetsApi(_client!);
       notifyListeners();
     } catch (e) {
@@ -38,7 +40,7 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<DriveApi> _authenticateDrive() async {
+  Future<drive.DriveApi> _authenticateDrive() async {
     if (_driveApi == null) {
       await authenticate();
     }
@@ -62,9 +64,10 @@ class AuthService with ChangeNotifier {
         spaces: 'drive',
         $fields: 'files(id, name, parents, trashed)',
         pageSize: 1);
-    print(fileList.files!.first.parents);
 
     if (fileList.files != null && fileList.files!.isNotEmpty) {
+      _folder = fileList.files!.first;
+      notifyListeners();
       return fileList.files!.first.id ?? '';
     }
     _folder = await createFolder(driveApi, folderName);
@@ -72,8 +75,9 @@ class AuthService with ChangeNotifier {
     return _folder!.id ?? '';
   }
 
-  Future<File> createFolder(DriveApi driveApi, String folderName) async {
-    final folderMetadata = File();
+  Future<drive.File> createFolder(
+      drive.DriveApi driveApi, String folderName) async {
+    final folderMetadata = drive.File();
     folderMetadata.name = folderName;
     folderMetadata.mimeType = 'application/vnd.google-apps.folder';
     folderMetadata.parents = [dotenv.env['PARENT_ID']!];
@@ -98,13 +102,13 @@ class AuthService with ChangeNotifier {
           q: query, spaces: 'drive', $fields: 'files(id, name)', pageSize: 1);
 
       if (fileList.files != null && fileList.files!.isNotEmpty) {
-        final existingFile = fileList.files!.first;
-        print(
-            'Sheet already exists: ${existingFile.name}, ID: ${existingFile.id}');
-        return existingFile.id!;
+        _sheet = fileList.files!.first;
+        notifyListeners();
+        print('Sheet already exists: ${_sheet!.name}, ID: ${_sheet!.id}');
+        return _sheet!.id!;
       }
 
-      final sheetMetadata = File()
+      final sheetMetadata = drive.File()
         ..name = sheetName
         ..mimeType = 'application/vnd.google-apps.spreadsheet'
         ..parents = [folderId];
@@ -137,21 +141,56 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<void> addRowToSpreadsheet(
-      SheetsApi sheetsApi, String spreadsheetId, Item item) async {
+  Future<void> addRowToSpreadsheet(String spreadsheetId, Item item) async {
     try {
       final row = item.toRow();
-
+      final sheetsApi = await _authenticateSheets();
+      final response = await _sheetsApi!.spreadsheets.values.get(
+        spreadsheetId,
+        '${item.number}!A:A',
+      );
+      final existingNumber =
+          response.values?.map((row) => row.isNotEmpty ? row[0] : '').toSet() ??
+              {};
+      if (existingNumber.contains(item.number)) {
+        throw Exception(
+            'The number "${item.number}" already exists in the sheet.');
+      }
       await sheetsApi.spreadsheets.values.append(
         ValueRange(values: [row]),
         spreadsheetId,
-        'Sheet1', // Sheet name where the row will be added
+        'Sheet1',
         valueInputOption: 'USER_ENTERED',
       );
 
       print('Row added successfully!');
     } catch (e) {
       print('Error adding row: $e');
+      rethrow;
+    }
+  }
+
+  Future<String> uploadFile(String folderId, File file) async {
+    try {
+      final driveApi = await _authenticateDrive();
+
+      final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+
+      final media = drive.Media(file.openRead(), file.lengthSync());
+      final driveFile = drive.File()
+        ..name = file.uri.pathSegments.last
+        ..mimeType = mimeType
+        ..parents = [folderId];
+
+      final result = await driveApi.files.create(
+        driveFile,
+        uploadMedia: media,
+      );
+
+      print('File uploaded: ${result.id}');
+      return result.id ?? 'No ID';
+    } catch (e) {
+      print('Error uploading file: $e');
       rethrow;
     }
   }
