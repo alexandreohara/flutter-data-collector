@@ -3,6 +3,7 @@ import 'package:data_collector/components/helpers.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
+import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:provider/provider.dart';
@@ -47,13 +48,16 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     height: SPACING_32,
                   ),
                   Text(
-                    'Antes de começar, digite o seu nome e o CNPJ do cliente',
+                    'Antes de começar, digite o seu nome e o CNPJ do cliente.',
                     style: theme.textTheme.headlineSmall,
                   ),
-                  Text(
-                    'Você poderá alterar essas informações futuramente',
-                    style: theme.textTheme.bodyMedium,
+                  SizedBox(
+                    height: SPACING_16,
                   ),
+                  Text('O CNPJ será o nome da pasta dentro do Google Drive',
+                      style: theme.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      )),
                   SizedBox(
                     height: SPACING_16,
                   ),
@@ -80,6 +84,13 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(
+                    height: SPACING_8,
+                  ),
+                  Text(
+                    'Você poderá alterar essas informações futuramente.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  SizedBox(
                     height: SPACING_48,
                   ),
                   PrimaryButton(
@@ -88,8 +99,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                       if (_formKey.currentState!.validate()) {
                         item.setUserAndCNPJ(
                             userController.text, maskedController.text);
-                        await _savePreferences(
-                            userController.text, maskedController.text);
+                        await _savePreferences(context, userController.text,
+                            maskedController.text);
                         Navigator.pushNamed(context, '/', arguments: item);
                       }
                     },
@@ -103,9 +114,16 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
     );
   }
 
-  Future<void> _savePreferences(String user, String cnpj) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', user);
-    await prefs.setString('cnpj', cnpj);
+  Future<void> _savePreferences(
+      BuildContext context, String user, String cnpj) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user', user);
+      await prefs.setString('cnpj', cnpj);
+      Provider.of<AuthService>(context, listen: false)
+          .createOrFetchFolder(cnpj);
+    } catch (e) {
+      print('Error saving preferences: $e');
+    }
   }
 }
