@@ -6,6 +6,7 @@ import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/service_account.dart';
+import 'package:data_collector/utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lottie/lottie.dart';
@@ -141,7 +142,16 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                         await _handleConfirmation(service, item, picture);
                         Navigator.of(context).pop();
                         showSuccessDialog(context);
-                      } catch (e) {
+                      } on FetchSheetException catch (e) {
+                        Navigator.of(context).pop();
+                        showErrorDialog(context, error: e.toString());
+                      } on ErrorAddingRowException catch (e) {
+                        Navigator.of(context).pop();
+                        showErrorDialog(context, error: e.toString());
+                      } on NumberAlreadyExistsException catch (e) {
+                        Navigator.of(context).pop();
+                        showWarningDialog(context, message: '$e');
+                      } on Exception catch (e) {
                         Navigator.of(context).pop();
                         showErrorDialog(context, error: e.toString());
                       }
@@ -214,8 +224,9 @@ void showSuccessDialog(BuildContext context) {
             height: SPACING_16,
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Retornar'),
+            onPressed: () =>
+                Navigator.of(context).popUntil(ModalRoute.withName('/')),
+            child: Text('Retornar pra o início'),
           ),
         ],
       );
@@ -244,6 +255,34 @@ void showErrorDialog(BuildContext context, {required String error}) {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text('Retornar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showWarningDialog(BuildContext context, {required String message}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/warning-animation.json',
+            height: 100,
+            repeat: false,
+          ),
+          Center(
+            child: Text(message, style: Theme.of(context).textTheme.titleLarge),
+          ),
+          SizedBox(
+            height: SPACING_16,
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).popUntil(ModalRoute.withName('/')),
+            child: Text('Recomeçar'),
           ),
         ],
       );

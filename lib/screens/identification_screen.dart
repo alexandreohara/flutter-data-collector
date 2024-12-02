@@ -121,10 +121,11 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user', user);
       await prefs.setString('cnpj', cnpj);
+      final folderId = await Provider.of<AuthService>(context, listen: false)
+          .createOrFetchFolder(cnpj, dotenv.env['PARENT_ID']!);
+      await prefs.setString('folderId', folderId);
       Provider.of<AuthService>(context, listen: false)
-          .createOrFetchFolder(cnpj);
-      Provider.of<AuthService>(context, listen: false)
-          .createOrFetchSheets(dotenv.env['PARENT_ID']!, 'Dados - $cnpj');
+          .createOrFetchSheets(folderId, 'Dados - $cnpj');
     } catch (e) {
       print('Error saving preferences: $e');
     }

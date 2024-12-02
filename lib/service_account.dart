@@ -54,11 +54,11 @@ class AuthService with ChangeNotifier {
     return _sheetsApi!;
   }
 
-  Future<String> createOrFetchFolder(String folderName) async {
+  Future<String> createOrFetchFolder(String folderName, String folderId) async {
     final driveApi = await _authenticateDrive();
 
     final query =
-        "name = '$folderName' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
+        "'$folderId' in parents and name = '$folderName' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
     final fileList = await driveApi.files.list(
         q: query,
         spaces: 'drive',
@@ -172,6 +172,8 @@ class AuthService with ChangeNotifier {
       );
 
       print('Row added successfully!');
+    } on NumberAlreadyExistsException {
+      rethrow;
     } catch (e) {
       throw ErrorAddingRowException('$e');
     }
@@ -192,7 +194,7 @@ class AuthService with ChangeNotifier {
       if (fileList.files != null && fileList.files!.isNotEmpty) {
         print(
             'File ${file.uri.pathSegments.last} already exists. Skipping upload.');
-        throw Exception('A imagem ${file.uri.pathSegments.last} já existe');
+        throw NumberAlreadyExistsException(file.uri.pathSegments.last);
       }
 
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
