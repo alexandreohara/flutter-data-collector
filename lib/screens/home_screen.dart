@@ -42,13 +42,13 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/edit-identification');
               },
             ),
-            ListTile(
-              title: Text('Ver itens registrados'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/test-db');
-              },
-            ),
+            // ListTile(
+            //   title: Text('Ver itens registrados'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, '/test-db');
+            //   },
+            // ),
           ],
         ),
       ),
