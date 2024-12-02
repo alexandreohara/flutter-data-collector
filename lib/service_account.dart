@@ -90,10 +90,9 @@ class AuthService with ChangeNotifier {
     return folder;
   }
 
-  Future<String> createOrFetchSheets(String folderId, String sheetName) async {
+  Future<String> fetchSheets(String folderId, String sheetName) async {
     try {
       final driveApi = await _authenticateDrive();
-      final sheetsApi = await _authenticateSheets();
 
       final query =
           "'$folderId' in parents and name = '$sheetName' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false";
@@ -107,6 +106,18 @@ class AuthService with ChangeNotifier {
         print('Sheet already exists: ${_sheet!.name}, ID: ${_sheet!.id}');
         return _sheet!.id!;
       }
+      throw ArgumentError('Sheet not found');
+    } catch (e) {
+      print('Error fetching sheet: $e');
+      rethrow;
+    }
+  }
+
+  Future<String> createOrFetchSheets(String folderId, String sheetName) async {
+    try {
+      await fetchSheets(folderId, sheetName);
+      final driveApi = await _authenticateDrive();
+      final sheetsApi = await _authenticateSheets();
 
       final sheetMetadata = drive.File()
         ..name = sheetName
@@ -147,7 +158,7 @@ class AuthService with ChangeNotifier {
       final sheetsApi = await _authenticateSheets();
       final response = await _sheetsApi!.spreadsheets.values.get(
         spreadsheetId,
-        '${item.number}!A:A',
+        'A:A',
       );
       final existingNumber =
           response.values?.map((row) => row.isNotEmpty ? row[0] : '').toSet() ??
@@ -173,6 +184,20 @@ class AuthService with ChangeNotifier {
   Future<String> uploadFile(String folderId, File file) async {
     try {
       final driveApi = await _authenticateDrive();
+      final query =
+          "'$folderId' in parents and name = '${file.uri.pathSegments.last}' and trashed = false";
+      final fileList = await driveApi.files.list(
+        q: query,
+        spaces: 'drive',
+        $fields: 'files(id, name)',
+        pageSize: 1,
+      );
+
+      if (fileList.files != null && fileList.files!.isNotEmpty) {
+        print(
+            'File ${file.uri.pathSegments.last} already exists. Skipping upload.');
+        return fileList.files!.first.id ?? 'No ID';
+      }
 
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 

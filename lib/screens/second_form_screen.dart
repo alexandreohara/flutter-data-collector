@@ -36,6 +36,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var item = Provider.of<Item>(context);
+    var service = Provider.of<AuthService>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -111,10 +112,13 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                   height: SPACING_16,
                 ),
                 SecondaryButton(
-                    text: pictureName != null
-                        ? 'Substituir foto'
-                        : 'Adicionar foto',
-                    onPressed: () => _takePicture()),
+                  text: pictureName != null
+                      ? 'Substituir foto'
+                      : 'Adicionar foto',
+                  onPressed: () => _takePicture(
+                    '${item.number!}',
+                  ),
+                ),
                 SizedBox(
                   height: SPACING_48,
                 ),
@@ -130,8 +134,7 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.observations = observationController.text;
                     showConfirmationDialog(context, item: item,
                         onConfirm: () async {
-                      await Provider.of<AuthService>(context, listen: false)
-                          .createOrFetchSheets(dotenv.env['PARENT_ID']!, 'aaa');
+                      _handleConfirmation(service, item, picture);
                       Navigator.of(context).pop();
                     }, onCancel: Navigator.of(context).pop);
                     // Navigator.of(context)
@@ -157,8 +160,8 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
     return Image.asset('lib/assets/images/image-placeholder.png', height: 100);
   }
 
-  Future<void> _takePicture() async {
-    pictureName = "teste.jpg";
+  Future<void> _takePicture(String filename) async {
+    pictureName = filename;
     Camera().takePicture(pictureName).then((File? file) {
       if (mounted) {
         setState(() {
@@ -166,6 +169,19 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
         });
       }
     });
+  }
+}
+
+Future<void> _handleConfirmation(
+    AuthService service, Item item, File? picture) async {
+  try {
+    await service.fetchSheets(dotenv.env['PARENT_ID']!, 'Dados - ${item.cnpj}');
+    if (picture != null) {
+      await service.uploadFile(dotenv.env['PARENT_ID']!, picture);
+    }
+    await service.addRowToSpreadsheet(service.sheet!.id!, item);
+  } catch (e) {
+    print('Error adding row: $e');
   }
 }
 
