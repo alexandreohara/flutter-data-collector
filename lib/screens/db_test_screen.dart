@@ -1,5 +1,5 @@
 import 'package:data_collector/components/button.dart';
-import 'package:data_collector/database_helper.dart';
+import 'package:data_collector/utils/database_helper.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class TestDatabase extends StatelessWidget {
               PrimaryButton(
                 text: 'Consultar',
                 onPressed: () {
-                  _queryAll();
+                  Navigator.pushNamed(context, '/saved-data');
                 },
               ),
               SizedBox(
@@ -61,7 +61,7 @@ class TestDatabase extends StatelessWidget {
       DatabaseHelper.user: 'Demetrio',
       DatabaseHelper.cnpj: 12345678901234,
       DatabaseHelper.name: 'Leandro',
-      DatabaseHelper.number: 30
+      DatabaseHelper.description: "Descrição"
     };
     final id = await dbHelper.insert(row);
     print('linha inserida id: $id');
@@ -78,8 +78,9 @@ class TestDatabase extends StatelessWidget {
       DatabaseHelper.columnId: 1,
       DatabaseHelper.user: 'Pedro',
       DatabaseHelper.cnpj: 01230123012301,
-      DatabaseHelper.name: 'Ale',
-      DatabaseHelper.number: 20
+      DatabaseHelper.name: 'AAAA',
+      DatabaseHelper.number: 12345,
+      DatabaseHelper.description: "Descrição atualizada"
     };
     final linhasAfetadas = await dbHelper.update(row);
     print('atualizadas $linhasAfetadas linha(s)');

@@ -37,7 +37,7 @@ class Camera {
   }
 
   Future<XFile?> _imageSelectorCamera() async {
-    return picker.pickImage(source: ImageSource.camera);
+    return picker.pickImage(source: ImageSource.camera, imageQuality: 60);
   }
 
   Future<void> _deleteIncorrectFile() async {

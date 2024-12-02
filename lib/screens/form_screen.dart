@@ -14,8 +14,6 @@ class FormScreen extends StatefulWidget {
 
 class _FormScreenState extends State<FormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final FocusNode oldNumberFocusNode = FocusNode();
-  final TextEditingController oldNumberController = TextEditingController();
   final FocusNode newNumberFocusNode = FocusNode();
   final TextEditingController newNumberController = TextEditingController();
   final FocusNode serialNumberFocusNode = FocusNode();
@@ -31,7 +29,6 @@ class _FormScreenState extends State<FormScreen> {
 
   @override
   void dispose() {
-    oldNumberController.dispose();
     serialNumberController.dispose();
     newNumberController.dispose();
     supplierFocusNode.dispose();
@@ -53,7 +50,6 @@ class _FormScreenState extends State<FormScreen> {
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  item.name = null;
                   item.number = null;
                   item.supplier = null;
                   item.model = null;
@@ -75,28 +71,6 @@ class _FormScreenState extends State<FormScreen> {
                   Text(
                     'Preencha os dados abaixo',
                     style: theme.textTheme.headlineSmall,
-                  ),
-                  SizedBox(
-                    height: SPACING_16,
-                  ),
-                  Stack(
-                    alignment: Alignment.centerRight,
-                    children: <Widget>[
-                      InputField(
-                        focusNode: oldNumberFocusNode,
-                        labelText: 'Número da placa antiga',
-                        isValid: true,
-                        controller: oldNumberController,
-                      ),
-                      IconButton(
-                        icon: Image.asset(
-                          'lib/assets/icons/barcode-scanner.png',
-                          width: 32,
-                        ),
-                        onPressed: () async =>
-                            oldNumberController.text = await handleScan(),
-                      ),
-                    ],
                   ),
                   SizedBox(
                     height: SPACING_16,
@@ -157,6 +131,7 @@ class _FormScreenState extends State<FormScreen> {
                     controller: descriptionController,
                     labelText: 'Descrição',
                     isValid: true,
+                    maxLength: 100,
                   ),
                   SizedBox(
                     height: SPACING_48,
@@ -165,8 +140,7 @@ class _FormScreenState extends State<FormScreen> {
                     text: 'Continuar',
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        item.name = oldNumberController.text;
-                        item.number = int.parse(newNumberController.text);
+                        item.number = newNumberController.text;
                         item.supplier = supplierController.text;
                         item.model = modelController.text;
                         item.type = typeController.text;

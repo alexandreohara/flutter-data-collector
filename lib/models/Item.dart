@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Item extends ChangeNotifier {
-  int? id;
   String? user; // usuário que está preenchendo os dados
   String? cnpj; // cnpj da empresa do cliente
-  String? serialNumber; // número de série do produto (caso exista)
-  String? name; // placa antiga
-  int? number; // número novo
+  String? number; // número novo
   String? supplier; // fornecedor
   String? model; // modelo
   String? type; // categoria do produto
@@ -16,11 +13,8 @@ class Item extends ChangeNotifier {
   String? observations; // observações
 
   Item({
-    this.id,
     this.user,
     this.cnpj,
-    this.serialNumber,
-    this.name,
     this.number,
     this.supplier,
     this.model,
@@ -33,11 +27,8 @@ class Item extends ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'user': user,
       'cnpj': cnpj,
-      'serialNumber': serialNumber,
-      'name': name,
       'number': number,
       'supplier': supplier,
       'model': model,
@@ -47,5 +38,37 @@ class Item extends ChangeNotifier {
       'location': location,
       'observations': observations,
     };
+  }
+
+  List<String?> toRow() {
+    return [
+      number,
+      supplier,
+      model,
+      type,
+      description,
+      incidentState,
+      location,
+      observations,
+      user,
+    ];
+  }
+
+  static List<String> getFields() => [
+        'Placa',
+        'Fornecedor',
+        'Modelo',
+        'Tipo',
+        'Descrição',
+        'Estado',
+        'Localização',
+        'Observações',
+        'Usuário',
+      ];
+
+  void setUserAndCNPJ(String user, String cnpj) {
+    this.user = user;
+    this.cnpj = cnpj;
+    notifyListeners();
   }
 }

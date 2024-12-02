@@ -1,16 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:csv/csv.dart';
-import 'package:data_collector/components/alert_modal.dart';
 import 'package:data_collector/components/button.dart';
-import 'package:data_collector/database_helper.dart';
+import 'package:data_collector/utils/database_helper.dart';
 import 'package:data_collector/design/colors.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -26,14 +21,19 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             Consumer<Item>(
                 builder: (BuildContext context, Item item, Widget? child) {
-              return UserAccountsDrawerHeader(
-                accountName: Text(
-                  item.user ?? "user",
-                  style:
-                      theme.textTheme.titleLarge!.copyWith(color: COLOR_WHITE),
-                ),
-                accountEmail: Text(item.cnpj ?? "cnpj"),
-              );
+              return FutureBuilder(
+                  future: _loadUserData(context, item),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    return UserAccountsDrawerHeader(
+                      accountName: Text(
+                        item.user ?? "user",
+                        style: theme.textTheme.titleLarge!
+                            .copyWith(color: COLOR_WHITE),
+                      ),
+                      accountEmail: Text(item.cnpj ?? "cnpj"),
+                    );
+                  });
             }),
             ListTile(
               title: Text('Alterar Nome e CNPJ'),
@@ -42,13 +42,13 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/edit-identification');
               },
             ),
-            ListTile(
-              title: Text('Ver itens registrados'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/test-db');
-              },
-            ),
+            // ListTile(
+            //   title: Text('Ver itens registrados'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, '/test-db');
+            //   },
+            // ),
           ],
         ),
       ),
@@ -79,62 +79,17 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: SPACING_32,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: SPACING_16),
-              child: OutlinedButton(
-                child: const Text('Carregar arquivo .csv'),
-                onPressed: () async {
-                  _showDialog(context);
-                },
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  void _showDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertModal(
-          title: Center(
-            child: Icon(
-              Icons.warning,
-              color: COLOR_ALERT_YELLOW,
-              size: 72,
-            ),
-          ),
-          content:
-              'Os dados devem ser carregados apenas na primeira vez. Deseja fazer isso?',
-          onSubmit: () async {
-            File file;
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowedExtensions: ['csv'],
-            );
-            if (result != null) {
-              file = File(result.files.single.path!);
-              List<List<dynamic>> csv = await file
-                  .openRead()
-                  .transform(utf8.decoder)
-                  .transform(CsvToListConverter(
-                    fieldDelimiter: ';',
-                    textDelimiter: '"',
-                    textEndDelimiter: '"',
-                  ))
-                  .toList();
-              await _insert(csv);
-              Navigator.of(context).pop();
-            }
-          },
-          onCancel: () {
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
+  Future<void> _loadUserData(BuildContext context, Item item) async {
+    final prefs = await SharedPreferences.getInstance();
+    final user = prefs.getString('user');
+    final cnpj = prefs.getString('cnpj');
+    item.setUserAndCNPJ(user!, cnpj!);
   }
 
   Future<void> _insert(List<List<dynamic>> csv) async {
@@ -142,7 +97,6 @@ class HomeScreen extends StatelessWidget {
     csv.removeAt(0);
     csv.forEach((row) async {
       await dbHelper.insert({
-        DatabaseHelper.serialNumber: row[0],
         DatabaseHelper.name: row[1],
         DatabaseHelper.supplier: row[2],
         DatabaseHelper.model: row[3],

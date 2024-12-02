@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       errorText = null;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          settings: RouteSettings(name: '/home'),
+                          settings: RouteSettings(name: '/'),
                           builder: (context) => HomeScreen(),
                         ),
                       );

@@ -15,12 +15,15 @@ class InputField extends StatelessWidget {
     this.maxLength,
     this.inputFormatters,
     this.validator,
+    this.buildCounter,
     this.obscureText,
+    this.initialValue,
   });
 
   final String? labelText;
   final String? hintText;
   final String? errorText;
+  final String? initialValue;
   final bool? isValid;
   final dynamic controller;
   final FocusNode? focusNode;
@@ -29,6 +32,7 @@ class InputField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator? validator;
+  final InputCounterWidgetBuilder? buildCounter;
   final bool? obscureText;
 
   @override
@@ -37,8 +41,8 @@ class InputField extends StatelessWidget {
     return TextFormField(
       validator: this.validator,
       maxLength: maxLength,
+      initialValue: initialValue,
       decoration: InputDecoration(
-        counterText: '',
         labelText: labelText ?? '',
         hintText: hintText ?? '',
         errorText: errorText ?? null,
@@ -54,6 +58,7 @@ class InputField extends StatelessWidget {
           ),
         ),
       ),
+      buildCounter: buildCounter,
       focusNode: focusNode,
       controller: controller,
       keyboardType: keyboardType ?? TextInputType.text,

@@ -3,9 +3,13 @@ import 'package:data_collector/components/helpers.dart';
 import 'package:data_collector/components/input_field.dart';
 import 'package:data_collector/design/constants.dart';
 import 'package:data_collector/models/Item.dart';
+import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditIdentificationScreen extends StatefulWidget {
   const EditIdentificationScreen();
@@ -19,11 +23,19 @@ class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode userFocusNode = FocusNode();
   final FocusNode cnpjFocusNode = FocusNode();
-  final userController = TextEditingController();
-  final maskedController =
-      MaskedTextController(mask: '00.000.000/0000-00', text: '');
+  late final userController;
+  late final maskedController;
 
   _EditIdentificationScreenState();
+
+  @override
+  void initState() {
+    super.initState();
+    final item = Provider.of<Item>(context, listen: false);
+    userController = TextEditingController(text: item.user);
+    maskedController =
+        MaskedTextController(mask: '00.000.000/0000-00', text: item.cnpj);
+  }
 
   @override
   void dispose() {
@@ -34,8 +46,8 @@ class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var item = Provider.of<Item>(context);
+    final theme = Theme.of(context);
+    final item = Provider.of<Item>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -96,11 +108,18 @@ class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
                   ),
                   PrimaryButton(
                     text: 'Salvar',
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        item.user = userController.text;
-                        item.cnpj = maskedController.text;
-                        Navigator.of(context).pop();
+                        showLoadingDialog(context);
+                        try {
+                          await _saveUserData(context, item,
+                              userController.text, maskedController.text);
+                          Navigator.of(context).pop();
+                          showSuccessDialog(context);
+                        } catch (e) {
+                          Navigator.of(context).pop();
+                          showErrorDialog(context, error: '$e');
+                        }
                       }
                     },
                   ),
@@ -112,4 +131,103 @@ class _EditIdentificationScreenState extends State<EditIdentificationScreen> {
       ),
     );
   }
+}
+
+Future<void> _saveUserData(
+    BuildContext context, Item item, String user, String cnpj) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('user', user);
+  await prefs.setString('cnpj', cnpj);
+  print('cnpj: $cnpj');
+  final folderId = await Provider.of<AuthService>(context, listen: false)
+      .createOrFetchFolder(cnpj, dotenv.env['PARENT_ID']!);
+  await prefs.setString('folderId', folderId);
+  print('folderid: $folderId');
+  await Provider.of<AuthService>(context, listen: false)
+      .createOrFetchSheets(folderId, 'Dados - $cnpj');
+  item.setUserAndCNPJ(user, cnpj);
+}
+
+void showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/loading-animation.json',
+            height: 200,
+            repeat: true,
+          ),
+          Center(
+            child: Text(
+              'Salvando no Google Drive...',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          SizedBox(
+            height: SPACING_24,
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showErrorDialog(BuildContext context, {required String error}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/error-animation.json',
+            height: 100,
+            repeat: false,
+          ),
+          Center(
+            child: Text('Ocorreu um erro: $error',
+                style: Theme.of(context).textTheme.titleLarge),
+          ),
+          SizedBox(
+            height: SPACING_16,
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Retornar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/success-animation.json',
+            height: 100,
+            repeat: false,
+          ),
+          Center(
+            child: Text('Usuário e CNPJ salvos com sucesso!',
+                style: Theme.of(context).textTheme.titleLarge),
+          ),
+          SizedBox(
+            height: SPACING_16,
+          ),
+          TextButton(
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                context, '/', (route) => false),
+            child: Text('Retornar pra o início'),
+          ),
+        ],
+      );
+    },
+  );
 }
