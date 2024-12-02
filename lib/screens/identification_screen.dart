@@ -19,9 +19,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode userFocusNode = FocusNode();
   final FocusNode cnpjFocusNode = FocusNode();
-  final userController = TextEditingController(text: 'Demetrio');
-  final maskedController = MaskedTextController(
-      mask: '00.000.000/0000-00', text: '41.684.544/0001-05');
+  final userController = TextEditingController();
+  final maskedController = MaskedTextController(mask: '00.000.000/0000-00');
 
   @override
   void dispose() {
