@@ -98,10 +98,8 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
                     text: 'Coletar dados',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        item.setUserAndCNPJ(
+                        await _savePreferences(context, item,
                             userController.text, maskedController.text);
-                        await _savePreferences(context, userController.text,
-                            maskedController.text);
                         Navigator.pushNamed(context, '/', arguments: item);
                       }
                     },
@@ -116,7 +114,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
   }
 
   Future<void> _savePreferences(
-      BuildContext context, String user, String cnpj) async {
+      BuildContext context, Item item, String user, String cnpj) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user', user);
@@ -126,6 +124,7 @@ class _IdentificationScreenState extends State<IdentificationScreen> {
       await prefs.setString('folderId', folderId);
       Provider.of<AuthService>(context, listen: false)
           .createOrFetchSheets(folderId, 'Dados - $cnpj');
+      item.setUserAndCNPJ(userController.text, maskedController.text);
     } catch (e) {
       print('Error saving preferences: $e');
     }

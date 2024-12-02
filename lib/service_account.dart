@@ -115,8 +115,9 @@ class AuthService with ChangeNotifier {
 
   Future<String> createOrFetchSheets(String folderId, String sheetName) async {
     try {
-      await fetchSheets(folderId, sheetName);
-      if (_sheet == null) {
+      final sheetId = await fetchSheets(folderId, sheetName);
+
+      if (sheetId == null) {
         final driveApi = await _authenticateDrive();
         final sheetsApi = await _authenticateSheets();
 

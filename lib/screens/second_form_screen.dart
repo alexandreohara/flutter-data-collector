@@ -156,8 +156,6 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                         showErrorDialog(context, error: e.toString());
                       }
                     }, onCancel: Navigator.of(context).pop);
-                    // Navigator.of(context)
-                    //     .popUntil(ModalRoute.withName('/home'));
                   },
                 ),
                 SizedBox(
