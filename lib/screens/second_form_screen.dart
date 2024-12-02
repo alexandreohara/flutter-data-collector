@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SecondFormScreen extends StatefulWidget {
   @override
@@ -194,9 +195,11 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
 Future<void> _handleConfirmation(
     AuthService service, Item item, File? picture) async {
   try {
-    await service.fetchSheets(dotenv.env['PARENT_ID']!, 'Dados - ${item.cnpj}');
+    final prefs = await SharedPreferences.getInstance();
+    final cnpjFolder = await prefs.getString('folderId');
+    await service.fetchSheets(cnpjFolder!, 'Dados - ${item.cnpj}');
     if (picture != null) {
-      await service.uploadFile(dotenv.env['PARENT_ID']!, picture);
+      await service.uploadFile(cnpjFolder, picture);
     }
     await service.addRowToSpreadsheet(service.sheet!.id!, item);
   } catch (e) {
@@ -224,8 +227,8 @@ void showSuccessDialog(BuildContext context) {
             height: SPACING_16,
           ),
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).popUntil(ModalRoute.withName('/')),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                context, '/', (route) => false),
             child: Text('Retornar pra o início'),
           ),
         ],
@@ -280,8 +283,8 @@ void showWarningDialog(BuildContext context, {required String message}) {
             height: SPACING_16,
           ),
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).popUntil(ModalRoute.withName('/')),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                context, '/', (route) => false),
             child: Text('Recomeçar'),
           ),
         ],

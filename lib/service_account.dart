@@ -90,7 +90,7 @@ class AuthService with ChangeNotifier {
     return folder;
   }
 
-  Future<String> fetchSheets(String folderId, String sheetName) async {
+  Future<String?> fetchSheets(String folderId, String sheetName) async {
     try {
       final driveApi = await _authenticateDrive();
 
@@ -106,7 +106,7 @@ class AuthService with ChangeNotifier {
         print('Sheet already exists: ${_sheet!.name}, ID: ${_sheet!.id}');
         return _sheet!.id!;
       }
-      throw ArgumentError('Sheet not found');
+      return null;
     } catch (e) {
       FetchSheetException('$e');
       rethrow;
@@ -116,19 +116,20 @@ class AuthService with ChangeNotifier {
   Future<String> createOrFetchSheets(String folderId, String sheetName) async {
     try {
       await fetchSheets(folderId, sheetName);
-      final driveApi = await _authenticateDrive();
-      final sheetsApi = await _authenticateSheets();
+      if (_sheet == null) {
+        final driveApi = await _authenticateDrive();
+        final sheetsApi = await _authenticateSheets();
 
-      final sheetMetadata = drive.File()
-        ..name = sheetName
-        ..mimeType = 'application/vnd.google-apps.spreadsheet'
-        ..parents = [folderId];
+        final sheetMetadata = drive.File()
+          ..name = sheetName
+          ..mimeType = 'application/vnd.google-apps.spreadsheet'
+          ..parents = [folderId];
 
-      _sheet = await driveApi.files
-          .create(sheetMetadata, $fields: 'id, name, mimeType, parents');
-      await addFields(sheetsApi, _sheet!.id!);
-      notifyListeners();
-
+        _sheet = await driveApi.files
+            .create(sheetMetadata, $fields: 'id, name, mimeType, parents');
+        await addFields(sheetsApi, _sheet!.id!);
+        notifyListeners();
+      }
       return _sheet!.id ?? '';
     } catch (e) {
       throw CreateOrFetchSheetException('$e');
