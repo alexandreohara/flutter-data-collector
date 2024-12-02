@@ -36,8 +36,7 @@ class AuthService with ChangeNotifier {
       _sheetsApi = SheetsApi(_client!);
       notifyListeners();
     } catch (e) {
-      print('Authentication failed: $e');
-      rethrow;
+      throw AuthenticationException('$e');
     }
   }
 

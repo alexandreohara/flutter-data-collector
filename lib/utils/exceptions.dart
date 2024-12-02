@@ -1,3 +1,11 @@
+class AuthenticationException implements Exception {
+  final String error;
+  AuthenticationException(this.error);
+
+  @override
+  String toString() => 'Erro de autenticação: $error';
+}
+
 class ErrorAddingRowException implements Exception {
   final String message;
   ErrorAddingRowException(this.message);
