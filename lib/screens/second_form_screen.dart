@@ -8,7 +8,6 @@ import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/service_account.dart';
 import 'package:data_collector/utils/exceptions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
