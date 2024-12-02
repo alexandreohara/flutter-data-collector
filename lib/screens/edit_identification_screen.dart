@@ -215,7 +215,7 @@ void showSuccessDialog(BuildContext context) {
             repeat: false,
           ),
           Center(
-            child: Text('Dados salvos com sucesso!',
+            child: Text('Usuário e CNPJ salvos com sucesso!',
                 style: Theme.of(context).textTheme.titleLarge),
           ),
           SizedBox(
