@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:data_collector/models/Item.dart';
+import 'package:data_collector/utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
@@ -108,7 +109,7 @@ class AuthService with ChangeNotifier {
       }
       throw ArgumentError('Sheet not found');
     } catch (e) {
-      print('Error fetching sheet: $e');
+      FetchSheetException('$e');
       rethrow;
     }
   }
@@ -131,8 +132,7 @@ class AuthService with ChangeNotifier {
 
       return _sheet!.id ?? '';
     } catch (e) {
-      print('Error creating or fetching sheet: $e');
-      rethrow;
+      throw CreateOrFetchSheetException('$e');
     }
   }
 
@@ -147,8 +147,7 @@ class AuthService with ChangeNotifier {
         valueInputOption: 'USER_ENTERED',
       );
     } catch (e) {
-      print('Error adding fields to spreadsheet: $e');
-      rethrow;
+      throw ErrorAddingRowException('$e');
     }
   }
 
@@ -164,8 +163,7 @@ class AuthService with ChangeNotifier {
           response.values?.map((row) => row.isNotEmpty ? row[0] : '').toSet() ??
               {};
       if (existingNumber.contains(item.number)) {
-        throw Exception(
-            'The number "${item.number}" already exists in the sheet.');
+        throw NumberAlreadyExistsException(item.number!);
       }
       await sheetsApi.spreadsheets.values.append(
         ValueRange(values: [row]),
@@ -176,8 +174,7 @@ class AuthService with ChangeNotifier {
 
       print('Row added successfully!');
     } catch (e) {
-      print('Error adding row: $e');
-      rethrow;
+      throw ErrorAddingRowException('$e');
     }
   }
 
@@ -196,7 +193,7 @@ class AuthService with ChangeNotifier {
       if (fileList.files != null && fileList.files!.isNotEmpty) {
         print(
             'File ${file.uri.pathSegments.last} already exists. Skipping upload.');
-        return fileList.files!.first.id ?? 'No ID';
+        throw Exception('A imagem ${file.uri.pathSegments.last} já existe');
       }
 
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';

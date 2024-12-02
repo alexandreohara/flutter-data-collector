@@ -8,6 +8,7 @@ import 'package:data_collector/models/Item.dart';
 import 'package:data_collector/service_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class SecondFormScreen extends StatefulWidget {
@@ -134,8 +135,16 @@ class _SecondFormScreenState extends State<SecondFormScreen> {
                     item.observations = observationController.text;
                     showConfirmationDialog(context, item: item,
                         onConfirm: () async {
-                      _handleConfirmation(service, item, picture);
                       Navigator.of(context).pop();
+                      showLoadingDialog(context);
+                      try {
+                        await _handleConfirmation(service, item, picture);
+                        Navigator.of(context).pop();
+                        showSuccessDialog(context);
+                      } catch (e) {
+                        Navigator.of(context).pop();
+                        showErrorDialog(context, error: e.toString());
+                      }
                     }, onCancel: Navigator.of(context).pop);
                     // Navigator.of(context)
                     //     .popUntil(ModalRoute.withName('/home'));
@@ -182,7 +191,91 @@ Future<void> _handleConfirmation(
     await service.addRowToSpreadsheet(service.sheet!.id!, item);
   } catch (e) {
     print('Error adding row: $e');
+    rethrow;
   }
+}
+
+void showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/success-animation.json',
+            height: 100,
+            repeat: false,
+          ),
+          Center(
+            child: Text('Dados salvos com sucesso!',
+                style: Theme.of(context).textTheme.titleLarge),
+          ),
+          SizedBox(
+            height: SPACING_16,
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Retornar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showErrorDialog(BuildContext context, {required String error}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/error-animation.json',
+            height: 100,
+            repeat: false,
+          ),
+          Center(
+            child: Text('Ocorreu um erro: $error',
+                style: Theme.of(context).textTheme.titleLarge),
+          ),
+          SizedBox(
+            height: SPACING_16,
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Retornar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return SimpleDialog(
+        children: [
+          Lottie.asset(
+            'lib/assets/images/loading-animation.json',
+            height: 200,
+            repeat: true,
+          ),
+          Center(
+            child: Text(
+              'Salvando no Google Drive...',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          SizedBox(
+            height: SPACING_24,
+          ),
+        ],
+      );
+    },
+  );
 }
 
 void showConfirmationDialog(
