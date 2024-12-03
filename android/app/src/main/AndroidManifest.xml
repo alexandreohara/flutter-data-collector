@@ -9,9 +9,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />  
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name="${applicationName}"
-        android:label="data_collector"
+        android:label="Axxia Data Collector"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
