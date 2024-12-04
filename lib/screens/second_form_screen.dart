@@ -207,6 +207,7 @@ Future<void> _handleConfirmation(
 
 void showSuccessDialog(BuildContext context) {
   showDialog(
+    barrierDismissible: false,
     context: context,
     builder: (context) {
       return SimpleDialog(
@@ -265,6 +266,7 @@ void showErrorDialog(BuildContext context, {required String error}) {
 void showWarningDialog(BuildContext context, {required String message}) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (context) {
       return SimpleDialog(
         children: [

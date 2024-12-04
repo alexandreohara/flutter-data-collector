@@ -206,6 +206,7 @@ void showErrorDialog(BuildContext context, {required String error}) {
 void showSuccessDialog(BuildContext context) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (context) {
       return SimpleDialog(
         children: [
